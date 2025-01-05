@@ -22,8 +22,8 @@ public class Gearbox {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "producent")
-    private String producent;
+    @Column(name = "producer")
+    private String producer;
 
     @Column(name = "number_of_gears")
     private int numberOfGears;
@@ -31,10 +31,10 @@ public class Gearbox {
     @Column(name = "type")
     private String type;
 
-    public Gearbox(String type, byte numberOfGears, String producent, String name) {
+    public Gearbox(String type, byte numberOfGears, String producer, String name) {
         this.type = type;
         this.numberOfGears = numberOfGears;
-        this.producent = producent;
+        this.producer = producer;
         this.name = name;
     }
 }

@@ -19,7 +19,7 @@ CREATE TABLE engines(
 CREATE TABLE gearboxes(
     id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
-    producent VARCHAR(20) NOT NULL,
+    producer VARCHAR(20) NOT NULL,
     number_of_gears TINYINT NOT NULL,
     type VARCHAR(20) NOT NULL
 );
@@ -60,7 +60,7 @@ CREATE TABLE cars (
     mileage VARCHAR(7) NOT NULL,
     model_id INT NOT NULL,
     insurance_expiry_date DATE NOT NULL,
-    rental_price_per_day VARCHAR(30) NOT NULL,
+    rental_price_per_day int NOT NULL,
     base_price INT NOT NULL,
     
     CONSTRAINT FK_CarModel FOREIGN KEY (model_id) REFERENCES models(id)
