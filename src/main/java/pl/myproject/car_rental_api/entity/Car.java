@@ -13,6 +13,21 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table(name = "cars")
+@NamedEntityGraph(
+        name = "car-model",
+        attributeNodes = {
+                @NamedAttributeNode(value = "model", subgraph = "model-engine-gearbox"),
+        },
+        subgraphs = {
+                @NamedSubgraph(
+                        name = "model-engine-gearbox",
+                        attributeNodes = {
+                                @NamedAttributeNode("engine"),
+                                @NamedAttributeNode("gearbox")
+                        }
+                )
+        }
+)
 public class Car {
 
     @Id
