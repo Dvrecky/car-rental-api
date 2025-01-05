@@ -27,22 +27,22 @@ public class Car {
     private LocalDate lastServiceDate;
 
     @Column(name = "mileage")
-    private String mileage;
+    private int mileage;
 
     @Column(name = "insurance_expiry_date")
     private LocalDate insuranceExpiryDate;
 
     @Column(name = "rental_price_per_day")
-    private int rentalPricePerDay;
+    private double rentalPricePerDay;
 
     @Column(name = "base_price")
-    private int basePrice;
+    private double basePrice;
 
     @OneToOne
     @JoinColumn(name = "model_id")
     private Model model;
 
-    public Car(int basePrice, int rentalPricePerDay, LocalDate insuranceExpiryDate, String mileage, LocalDate lastServiceDate, String registrationNumber) {
+    public Car(int basePrice, int rentalPricePerDay, LocalDate insuranceExpiryDate, int mileage, LocalDate lastServiceDate, String registrationNumber) {
         this.basePrice = basePrice;
         this.rentalPricePerDay = rentalPricePerDay;
         this.insuranceExpiryDate = insuranceExpiryDate;
