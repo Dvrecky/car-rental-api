@@ -1,13 +1,16 @@
 DROP DATABASE IF EXISTS carRentalDb;
 
+-- CREATE DATABASE IF NOT EXISTS carRentalDb
 CREATE DATABASE carRentalDb
+-- ustawiony zestaw znaków utf8mb4, zalecany w nowych projektach
 CHARACTER SET utf8mb4
+-- traktuje znaki małe i duże tak samo
 COLLATE utf8mb4_unicode_ci;
 
 USE carRentalDb;
 
 CREATE TABLE engines(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+	id INT PRIMARY KEY AUTO_INCREMENT, -- primary key obejmuje unique oraz not null
     capacity DECIMAL(5, 3) NOT NULL,
     horsepower SMALLINT NOT NULL,
     torque SMALLINT NOT NULL,
@@ -19,7 +22,7 @@ CREATE TABLE engines(
 CREATE TABLE gearboxes(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
-    producer VARCHAR(20) NOT NULL,
+    producent VARCHAR(20) NOT NULL,
     number_of_gears TINYINT NOT NULL,
     type VARCHAR(20) NOT NULL
 );
@@ -43,7 +46,13 @@ CREATE TABLE models(
     `0-100_time` DECIMAL(4,2) NOT NULL,
     photo_url VARCHAR(255) NOT NULL,
     average_price INT NOT NULL,
-    description TEXT NOT NULL
+    description TEXT NOT NULL,
+    engine_id INT NOT NULL,
+    gearbox_id INT NOT NULL,
+    
+    CONSTRAINT FK_ModelEngine FOREIGN KEY (engine_id) REFERENCES engines(id),
+    CONSTRAINT FK_ModelGearboxes FOREIGN KEY (gearbox_id) REFERENCES gearboxes(id)
+    
 );
 
 CREATE TABLE cars (
@@ -121,22 +130,6 @@ CREATE TABLE car_equipment (
     CONSTRAINT FK_CarEquipmentModel FOREIGN KEY (model_id) REFERENCES models(id),
     CONSTRAINT FK_CarEquipmentEquipment FOREIGN KEY (equipment_id) REFERENCES equipments(id)
 );
-CREATE TABLE model_engine (
-    model_id INT NOT NULL,
-    engine_id INT NOT NULL,
-    
-    PRIMARY KEY (model_id, engine_id),
-    CONSTRAINT FK_ModelEngineModel FOREIGN KEY (model_id) REFERENCES models(id),
-    CONSTRAINT FK_ModelEngineEngine FOREIGN KEY (engine_id) REFERENCES engines(id)
-);
 
-CREATE TABLE model_gearbox (
-    model_id INT NOT NULL,
-    gearbox_id INT NOT NULL,
-    
-    PRIMARY KEY (model_id, gearbox_id),
-    CONSTRAINT FK_ModelGearboxModel FOREIGN KEY (model_id) REFERENCES models(id),
-    CONSTRAINT FK_ModelGearboxGearbox FOREIGN KEY (gearbox_id) REFERENCES gearboxes(id)
-);
 
 
