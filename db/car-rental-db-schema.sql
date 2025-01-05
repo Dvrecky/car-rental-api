@@ -7,7 +7,7 @@ COLLATE utf8mb4_unicode_ci;
 USE carRentalDb;
 
 CREATE TABLE engines(
-    id INT PRIMARY KEY AUTO_INCREMENT,
+	id INT PRIMARY KEY AUTO_INCREMENT,
     capacity DECIMAL(5, 3) NOT NULL,
     horsepower SMALLINT NOT NULL,
     torque SMALLINT NOT NULL,
@@ -17,7 +17,7 @@ CREATE TABLE engines(
 );
 
 CREATE TABLE gearboxes(
-    id INT PRIMARY KEY AUTO_INCREMENT,
+	id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
     producer VARCHAR(20) NOT NULL,
     number_of_gears TINYINT NOT NULL,
@@ -25,9 +25,7 @@ CREATE TABLE gearboxes(
 );
 
 CREATE TABLE models(
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    engine_id INT NOT NULL,
-    gearbox_id INT NOT NULL,
+	id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(40) NOT NULL,
     type VARCHAR(20) NOT NULL,
     production_year DATE NOT NULL,
@@ -43,25 +41,20 @@ CREATE TABLE models(
     C02_emissions VARCHAR(20) NOT NULL,
     weight SMALLINT NOT NULL,
     `0-100_time` DECIMAL(4,2) NOT NULL,
-    photo_url VARCHAR(30) NOT NULL,
+    photo_url VARCHAR(255) NOT NULL,
     average_price INT NOT NULL,
-    description TEXT NOT NULL,
-    
-    CONSTRAINT FK_ModelEngine FOREIGN KEY (engine_id)
-    REFERENCES engines(id),
-    CONSTRAINT FK_ModelGearbox FOREIGN KEY (gearbox_id)
-    REFERENCES gearboxes(id)
+    description TEXT NOT NULL
 );
 
 CREATE TABLE cars (
     id INT PRIMARY KEY AUTO_INCREMENT,
     registration_number VARCHAR(7) UNIQUE NOT NULL,
     last_service_date DATE NOT NULL,
-    mileage VARCHAR(7) NOT NULL,
+    mileage INT NOT NULL,
     model_id INT NOT NULL,
     insurance_expiry_date DATE NOT NULL,
-    rental_price_per_day int NOT NULL,
-    base_price INT NOT NULL,
+    rental_price_per_day DECIMAl(10,2) NOT NULL,
+    base_price DECIMAl(10,2) NOT NULL,
     
     CONSTRAINT FK_CarModel FOREIGN KEY (model_id) REFERENCES models(id)
 );
