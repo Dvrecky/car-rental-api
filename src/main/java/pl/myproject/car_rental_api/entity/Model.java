@@ -76,21 +76,13 @@ public class Model {
     @Column(name = "description")
     private String description;
 
-    @ManyToMany
-    @JoinTable(
-            name = "model_engine",
-            joinColumns = @JoinColumn(name = "model_id"),
-            inverseJoinColumns = @JoinColumn(name = "engine_id")
-    )
-    private Set<Engine> engines;
+    @ManyToOne
+    @JoinColumn(name = "engine_id")
+    private Engine engine;
 
-    @ManyToMany
-    @JoinTable(
-            name = "model_gearbox",
-            joinColumns = @JoinColumn(name = "model_id"),
-            inverseJoinColumns = @JoinColumn(name = "gearbox_id")
-    )
-    private Set<Gearbox> gearboxes;
+    @ManyToOne
+    @JoinColumn(name = "gearbox_id")
+    private Gearbox gearboxes;
 
     public Model(String description, int averagePrice, String photoUrl, double accelerationTime, int weight, String CO2Emissions, String fuelConsumption, String environmentalLabel, int numberOfSeats, String bodyType, int numberOfDoors, String typeOfDrive, String color, String brandCountry, String brand, LocalDate productionYear, String type, String name) {
         this.description = description;
