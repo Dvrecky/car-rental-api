@@ -82,7 +82,7 @@ public class Model {
 
     @ManyToOne
     @JoinColumn(name = "gearbox_id")
-    private Gearbox gearboxes;
+    private Gearbox gearbox;
 
     public Model(String description, int averagePrice, String photoUrl, double accelerationTime, int weight, String CO2Emissions, String fuelConsumption, String environmentalLabel, int numberOfSeats, String bodyType, int numberOfDoors, String typeOfDrive, String color, String brandCountry, String brand, LocalDate productionYear, String type, String name) {
         this.description = description;
