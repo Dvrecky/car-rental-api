@@ -1,13 +1,13 @@
 package pl.myproject.car_rental_api.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
+
 import java.time.LocalDate;
 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -64,5 +64,15 @@ public class Car {
         this.mileage = mileage;
         this.lastServiceDate = lastServiceDate;
         this.registrationNumber = registrationNumber;
+    }
+
+    public Car(int id, String registrationNumber, LocalDate lastServiceDate, int mileage, LocalDate insuranceExpiryDate, double rentalPricePerDay, double basePrice) {
+        this.id = id;
+        this.registrationNumber = registrationNumber;
+        this.lastServiceDate = lastServiceDate;
+        this.mileage = mileage;
+        this.insuranceExpiryDate = insuranceExpiryDate;
+        this.rentalPricePerDay = rentalPricePerDay;
+        this.basePrice = basePrice;
     }
 }

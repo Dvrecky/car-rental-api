@@ -4,12 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class CarServiceImpl implements CarService {

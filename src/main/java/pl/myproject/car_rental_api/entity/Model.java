@@ -1,15 +1,13 @@
 package pl.myproject.car_rental_api.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.util.Set;
 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
@@ -103,5 +101,27 @@ public class Model {
         this.productionYear = productionYear;
         this.type = type;
         this.name = name;
+    }
+
+    public Model(int id, String name, String type, LocalDate productionYear, String brand, String brandCountry, String color, String typeOfDrive, int numberOfDoors, String bodyType, int numberOfSeats, String environmentalLabel, String fuelConsumption, String CO2Emissions, int weight, double accelerationTime, String photoUrl, int averagePrice, String description) {
+        this.id = id;
+        this.name = name;
+        this.type = type;
+        this.productionYear = productionYear;
+        this.brand = brand;
+        this.brandCountry = brandCountry;
+        this.color = color;
+        this.typeOfDrive = typeOfDrive;
+        this.numberOfDoors = numberOfDoors;
+        this.bodyType = bodyType;
+        this.numberOfSeats = numberOfSeats;
+        this.environmentalLabel = environmentalLabel;
+        this.fuelConsumption = fuelConsumption;
+        this.CO2Emissions = CO2Emissions;
+        this.weight = weight;
+        this.accelerationTime = accelerationTime;
+        this.photoUrl = photoUrl;
+        this.averagePrice = averagePrice;
+        this.description = description;
     }
 }

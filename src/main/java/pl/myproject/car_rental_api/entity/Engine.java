@@ -1,12 +1,11 @@
 package pl.myproject.car_rental_api.entity;
 
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 
+@Builder
 @NoArgsConstructor
+@AllArgsConstructor
 @Getter
 @Setter
 @ToString
