@@ -1,4 +1,4 @@
-package pl.myproject.car_rental_api.service;
+package pl.myproject.car_rental_api.unit.service;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -13,6 +13,7 @@ import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
 import pl.myproject.car_rental_api.entity.Model;
 import pl.myproject.car_rental_api.repository.CarRepository;
+import pl.myproject.car_rental_api.service.CarService;
 import pl.myproject.car_rental_api.service.impl.CarServiceImpl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -22,7 +23,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceUnitTest {
+public class UserServiceTest {
 
     @Mock
     private CarRepository carRepository;

@@ -1,9 +1,10 @@
-package pl.myproject.car_rental_api.repository;
+package pl.myproject.car_rental_api.unit.repository;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import pl.myproject.car_rental_api.entity.Car;
+import pl.myproject.car_rental_api.repository.CarRepository;
 
 import java.util.List;
 
