@@ -1,54 +1,47 @@
-package pl.myproject.car_rental_api.unit.service;
+package pl.myproject.car_rental_api.unit.controller;
 
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
-import org.modelmapper.ModelMapper;
-import org.modelmapper.config.Configuration;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import pl.myproject.car_rental_api.controller.CarController;
 import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.entity.Car;
-import pl.myproject.car_rental_api.entity.Engine;
-import pl.myproject.car_rental_api.entity.Gearbox;
-import pl.myproject.car_rental_api.entity.Model;
-import pl.myproject.car_rental_api.repository.CarRepository;
+import pl.myproject.car_rental_api.dto.EngineDTO;
+import pl.myproject.car_rental_api.dto.GearboxDTO;
+import pl.myproject.car_rental_api.dto.ModelDTO;
 import pl.myproject.car_rental_api.service.CarService;
-import pl.myproject.car_rental_api.service.impl.CarServiceImpl;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.BDDMockito.given;
+import static org.hamcrest.Matchers.hasSize;
+import static org.mockito.ArgumentMatchers.contains;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.hamcrest.CoreMatchers.is;
 
 import java.time.LocalDate;
 import java.util.List;
 
-@ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+import static org.mockito.BDDMockito.given;
 
-    @Mock
-    private CarRepository carRepository;
 
+@WebMvcTest(CarController.class)
+public class CarControllerTest {
+
+    @Autowired
+    private MockMvc mockMvc;
+
+    @MockitoBean
     private CarService carService;
 
-    private ModelMapper modelMapper;
-
-    @BeforeEach
-    public void setup() {
-
-        modelMapper = new ModelMapper();
-        modelMapper.getConfiguration()
-                .setFieldMatchingEnabled(true)
-                .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
-
-        carService = new CarServiceImpl(carRepository, modelMapper);
-    }
-
     @Test
-    public void returnCarDTOs() {
+    public void getCarsDTO() throws Exception{
 
         // creating test data
         // creating Engine objects
-        Engine engine1 = Engine.builder()
+        EngineDTO engineDTO1 = EngineDTO.builder()
                 .id(1)
                 .capacity(2.0)
                 .horsepower(150)
@@ -58,7 +51,7 @@ public class UserServiceTest {
                 .engineType("Turbocharged")
                 .build();
 
-        Engine engine2 = Engine.builder()
+        EngineDTO engineDTO2 = EngineDTO.builder()
                 .id(2)
                 .capacity(1.6)
                 .horsepower(120)
@@ -69,7 +62,7 @@ public class UserServiceTest {
                 .build();
 
         // creating Gearbox objects
-        Gearbox gearbox1 = Gearbox.builder()
+        GearboxDTO gearboxDTO1 = GearboxDTO.builder()
                 .id(1)
                 .name("ZF6HP")
                 .producer("ZF")
@@ -77,7 +70,7 @@ public class UserServiceTest {
                 .type("Automatic")
                 .build();
 
-        Gearbox gearbox2 = Gearbox.builder()
+        GearboxDTO gearboxDTO2 = GearboxDTO.builder()
                 .id(2)
                 .name("Getrag5MT")
                 .producer("Getrag")
@@ -86,7 +79,7 @@ public class UserServiceTest {
                 .build();
 
         // creating Model objects
-        Model model1 = Model.builder()
+        ModelDTO modelDTO1 = ModelDTO.builder()
                 .id(1)
                 .name("BMW 320d")
                 .type("Limousine")
@@ -106,11 +99,11 @@ public class UserServiceTest {
                 .photoUrl("https://example.com/photo1.jpg")
                 .averagePrice(30000)
                 .description("A comfortable sedan with modern technologies")
-                .engine(engine1)
-                .gearbox(gearbox1)
+                .engine(engineDTO1)
+                .gearbox(gearboxDTO1)
                 .build();
 
-        Model model2 = Model.builder()
+        ModelDTO modelDTO2 = ModelDTO.builder()
                 .id(2)
                 .name("Toyota Yaris")
                 .type("Urban")
@@ -130,12 +123,12 @@ public class UserServiceTest {
                 .photoUrl("https://example.com/photo2.jpg")
                 .averagePrice(20000)
                 .description("An economical hatchback perfect for the city")
-                .engine(engine2)
-                .gearbox(gearbox2)
+                .engine(engineDTO2)
+                .gearbox(gearboxDTO2)
                 .build();
 
         // creating Car objects
-        Car car1 = Car.builder()
+        CarDTO carDTO1 = CarDTO.builder()
                 .id(1)
                 .registrationNumber("ABC12345")
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
@@ -143,10 +136,10 @@ public class UserServiceTest {
                 .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
                 .rentalPricePerDay(100)
                 .basePrice(25000)
-                .model(model1)
+                .model(modelDTO1)
                 .build();
 
-        Car car2 = Car.builder()
+        CarDTO carDTO2 = CarDTO.builder()
                 .id(2)
                 .registrationNumber("XYZ67890")
                 .lastServiceDate(LocalDate.of(2022, 8, 20))
@@ -154,36 +147,23 @@ public class UserServiceTest {
                 .insuranceExpiryDate(LocalDate.of(2024, 10, 30))
                 .rentalPricePerDay(80)
                 .basePrice(15000)
-                .model(model2)
+                .model(modelDTO2)
                 .build();
 
-        // carRepository will return list of car1 and car2 when invoking getAllCarsWithDetails method
-        given(carRepository.getAllCarsWithDetails()).willReturn(List.of(car1, car2));
+        // carService will return list of cars when invoking getAllCarsWithDetails() method
+        given(carService.getAllCarsWithDetails()).willReturn(List.of(carDTO1, carDTO2));
 
-        // retrieving list of cars with service
-        List<CarDTO> carDTOs = carService.getAllCarsWithDetails();
+        // Get request simulation
+        ResultActions response = mockMvc.perform(get("/api/cars"));
 
-        assertThat(carDTOs).isNotNull();
-        assertThat(carDTOs.size()).isEqualTo(2);
-
-        // getting carDTO with given data
-        CarDTO testCarDTO = carDTOs.stream()
-                .filter(car -> car.getRegistrationNumber().equals("ABC12345"))
-                .findFirst()
-                .orElse(null);
-
-        // checking if car exists
-        assertThat(testCarDTO).isNotNull();
-        // checking if data has been mapped correctly
-        assertThat(testCarDTO.getModel().getBrand()).isEqualTo("BMW");
-        assertThat(testCarDTO.getModel().getEngine().getEngineType()).isEqualTo("Turbocharged");
-        assertThat(testCarDTO.getModel().getGearbox().getProducer()).isEqualTo("ZF");
-
-        // displaying carDTOs list
-        System.out.println("-------------------------------------------------------------------------------");
-        for(CarDTO carDTO : carDTOs) {
-            System.out.println();
-            System.out.println("CarDTO: " + carDTO);
-        }
+        // checking returned data correctness
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.size()", is(2)))
+                .andExpect(jsonPath("$[1].id", is(2)))
+                .andExpect(jsonPath("$[1].registrationNumber", is("XYZ67890")))
+                .andExpect(jsonPath("$[1].model.brand", is("Toyota")))
+                .andExpect(jsonPath("$[1].model.engine.fuelType", is("Petrol")))
+                .andExpect(jsonPath("$[1].model.gearbox.type", is("Manual")));
     }
 }
