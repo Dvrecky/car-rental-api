@@ -22,7 +22,7 @@ CREATE TABLE engines(
 CREATE TABLE gearboxes(
 	id INT PRIMARY KEY AUTO_INCREMENT,
     name VARCHAR(30) NOT NULL,
-    producent VARCHAR(20) NOT NULL,
+    producer VARCHAR(20) NOT NULL,
     number_of_gears TINYINT NOT NULL,
     type VARCHAR(20) NOT NULL
 );
@@ -35,13 +35,13 @@ CREATE TABLE models(
     brand VARCHAR(20) NOT NULL,
     brand_country VARCHAR(20) NOT NULL,
     color VARCHAR(30) NOT NULL,
-    type_od_drive VARCHAR(3) NOT NULL,
+    type_of_drive VARCHAR(3) NOT NULL,
     number_of_doors TINYINT NOT NULL,
     body_type VARCHAR(20) NOT NULL,
     number_of_seats TINYINT NOT NULL,
     environmental_label VARCHAR(20) NOT NULL,
     fuel_consumption VARCHAR(10) NOT NULL,
-    C02_emissions VARCHAR(20) NOT NULL,
+    CO2_emissions VARCHAR(20) NOT NULL,
     weight SMALLINT NOT NULL,
     `0-100_time` DECIMAL(4,2) NOT NULL,
     photo_url VARCHAR(255) NOT NULL,
@@ -60,11 +60,11 @@ CREATE TABLE cars (
     registration_number VARCHAR(7) UNIQUE NOT NULL,
     last_service_date DATE NOT NULL,
     mileage INT NOT NULL,
-    model_id INT NOT NULL,
     insurance_expiry_date DATE NOT NULL,
     rental_price_per_day DECIMAl(10,2) NOT NULL,
     base_price DECIMAl(10,2) NOT NULL,
-    
+    model_id INT NOT NULL,
+
     CONSTRAINT FK_CarModel FOREIGN KEY (model_id) REFERENCES models(id)
 );
 
