@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.util.List;
@@ -13,9 +12,6 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
 public class UserServiceIntegrationTest {
-
-    @Autowired
-    private CarRepository carRepository;
 
     @Autowired
     private CarService carService;
