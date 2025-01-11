@@ -17,7 +17,7 @@ public class CarDTO {
     private LocalDate lastServiceDate;
     private int mileage;
     private LocalDate insuranceExpiryDate;
-    private double rentalPricePerDay;
-    private double basePrice;
+    private int rentalPricePerDay;
+    private int basePrice;
     private ModelDTO model;
 }

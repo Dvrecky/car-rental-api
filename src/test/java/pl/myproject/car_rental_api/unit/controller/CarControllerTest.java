@@ -19,6 +19,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 import static org.hamcrest.CoreMatchers.is;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -41,7 +42,7 @@ public class CarControllerTest {
         // creating Engine objects
         EngineDTO engineDTO1 = EngineDTO.builder()
                 .id(1)
-                .capacity(2.0)
+                .capacity(new BigDecimal("2.0"))
                 .horsepower(150)
                 .torque(300)
                 .fuelType("Diesel")
@@ -51,7 +52,7 @@ public class CarControllerTest {
 
         EngineDTO engineDTO2 = EngineDTO.builder()
                 .id(2)
-                .capacity(1.6)
+                .capacity(new BigDecimal("1.6"))
                 .horsepower(120)
                 .torque(250)
                 .fuelType("Petrol")
@@ -90,10 +91,10 @@ public class CarControllerTest {
                 .bodyType("Sedan")
                 .numberOfSeats(5)
                 .environmentalLabel("Euro 6")
-                .fuelConsumption("6L/100km")
-                .CO2Emissions("120g/km")
+                .fuelConsumption(new BigDecimal("6"))
+                .CO2Emissions(new BigDecimal("120"))
                 .weight(1500)
-                .accelerationTime(8.5)
+                .accelerationTime(new BigDecimal("8.5"))
                 .photoUrl("https://example.com/photo1.jpg")
                 .averagePrice(30000)
                 .description("A comfortable sedan with modern technologies")
@@ -114,10 +115,10 @@ public class CarControllerTest {
                 .bodyType("Hatchback")
                 .numberOfSeats(5)
                 .environmentalLabel("Euro 6")
-                .fuelConsumption("5L/100km")
-                .CO2Emissions("95g/km")
+                .fuelConsumption(new BigDecimal("5"))
+                .CO2Emissions(new BigDecimal("95"))
                 .weight(1200)
-                .accelerationTime(10.2)
+                .accelerationTime(new BigDecimal("10.2"))
                 .photoUrl("https://example.com/photo2.jpg")
                 .averagePrice(20000)
                 .description("An economical hatchback perfect for the city")

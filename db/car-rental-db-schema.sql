@@ -11,7 +11,7 @@ USE carRentalDb;
 
 CREATE TABLE engines(
 	id INT PRIMARY KEY AUTO_INCREMENT, -- primary key obejmuje unique oraz not null
-    capacity DECIMAL(5, 3) NOT NULL,
+    capacity DECIMAL(3, 1) NOT NULL,
     horsepower SMALLINT NOT NULL,
     torque SMALLINT NOT NULL,
     fuel_type VARCHAR(20) NOT NULL,
@@ -40,8 +40,8 @@ CREATE TABLE models(
     body_type VARCHAR(20) NOT NULL,
     number_of_seats TINYINT NOT NULL,
     environmental_label VARCHAR(20) NOT NULL,
-    fuel_consumption VARCHAR(10) NOT NULL,
-    CO2_emissions VARCHAR(20) NOT NULL,
+    fuel_consumption DECIMAL(4,2) NOT NULL,
+    CO2_emissions DECIMAL(5,1) NOT NULL,
     weight SMALLINT NOT NULL,
     `0-100_time` DECIMAL(4,2) NOT NULL,
     photo_url VARCHAR(255) NOT NULL,
@@ -61,8 +61,8 @@ CREATE TABLE cars (
     last_service_date DATE NOT NULL,
     mileage INT NOT NULL,
     insurance_expiry_date DATE NOT NULL,
-    rental_price_per_day DECIMAl(10,2) NOT NULL,
-    base_price DECIMAl(10,2) NOT NULL,
+    rental_price_per_day INT NOT NULL,
+    base_price INT NOT NULL,
     model_id INT NOT NULL,
 
     CONSTRAINT FK_CarModel FOREIGN KEY (model_id) REFERENCES models(id)

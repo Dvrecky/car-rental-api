@@ -2,6 +2,8 @@ package pl.myproject.car_rental_api.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -11,7 +13,7 @@ import lombok.*;
 public class EngineDTO {
 
     private int id;
-    private double capacity;
+    private BigDecimal capacity;
     private int horsepower;
     private int torque;
     private String fuelType;

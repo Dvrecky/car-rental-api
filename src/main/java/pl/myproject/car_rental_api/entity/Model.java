@@ -3,6 +3,7 @@ package pl.myproject.car_rental_api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Builder
@@ -53,17 +54,17 @@ public class Model {
     @Column(name = "environmental_label")
     private String environmentalLabel;
 
-    @Column(name = "fuel_consumption")
-    private String fuelConsumption;
+    @Column(name = "fuel_consumption", precision = 4, scale = 2)
+    private BigDecimal fuelConsumption;
 
-    @Column(name = "CO2_emissions")
-    private String CO2Emissions;
+    @Column(name = "CO2_emissions", precision = 5, scale = 1)
+    private BigDecimal CO2Emissions;
 
     @Column(name = "weight")
     private int weight;
 
-    @Column(name = "0-100_time")
-    private double accelerationTime;
+    @Column(name = "0-100_time", precision = 4, scale = 2)
+    private BigDecimal accelerationTime;
 
     @Column(name = "photo_url")
     private String photoUrl;
@@ -82,7 +83,7 @@ public class Model {
     @JoinColumn(name = "gearbox_id")
     private Gearbox gearbox;
 
-    public Model(String description, int averagePrice, String photoUrl, double accelerationTime, int weight, String CO2Emissions, String fuelConsumption, String environmentalLabel, int numberOfSeats, String bodyType, int numberOfDoors, String typeOfDrive, String color, String brandCountry, String brand, LocalDate productionYear, String type, String name) {
+    public Model(String description, int averagePrice, String photoUrl, BigDecimal accelerationTime, int weight, BigDecimal CO2Emissions, BigDecimal fuelConsumption, String environmentalLabel, int numberOfSeats, String bodyType, int numberOfDoors, String typeOfDrive, String color, String brandCountry, String brand, LocalDate productionYear, String type, String name) {
         this.description = description;
         this.averagePrice = averagePrice;
         this.photoUrl = photoUrl;
@@ -103,7 +104,7 @@ public class Model {
         this.name = name;
     }
 
-    public Model(int id, String name, String type, LocalDate productionYear, String brand, String brandCountry, String color, String typeOfDrive, int numberOfDoors, String bodyType, int numberOfSeats, String environmentalLabel, String fuelConsumption, String CO2Emissions, int weight, double accelerationTime, String photoUrl, int averagePrice, String description) {
+    public Model(int id, String name, String type, LocalDate productionYear, String brand, String brandCountry, String color, String typeOfDrive, int numberOfDoors, String bodyType, int numberOfSeats, String environmentalLabel, BigDecimal fuelConsumption, BigDecimal CO2Emissions, int weight, BigDecimal accelerationTime, String photoUrl, int averagePrice, String description) {
         this.id = id;
         this.name = name;
         this.type = type;

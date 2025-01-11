@@ -2,6 +2,7 @@ package pl.myproject.car_rental_api.dto;
 
 import lombok.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Builder
@@ -24,10 +25,10 @@ public class ModelDTO {
     private String bodyType;
     private int numberOfSeats;
     private String environmentalLabel;
-    private String fuelConsumption;
-    private String CO2Emissions;
+    private BigDecimal fuelConsumption;
+    private BigDecimal CO2Emissions;
     private int weight;
-    private double accelerationTime;
+    private BigDecimal accelerationTime;
     private String photoUrl;
     private int averagePrice;
     private String description;

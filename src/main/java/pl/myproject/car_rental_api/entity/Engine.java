@@ -3,6 +3,8 @@ package pl.myproject.car_rental_api.entity;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.math.BigDecimal;
+
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,8 +20,8 @@ public class Engine {
     @Column(name = "id")
     private int id;
 
-    @Column(name = "capacity")
-    private double capacity;
+    @Column(name = "capacity", precision = 3, scale = 1)
+    private BigDecimal capacity;
 
     @Column(name = "horsepower")
     private int horsepower;
@@ -36,7 +38,7 @@ public class Engine {
     @Column(name = "engine_type")
     private String engineType;
 
-    public Engine(double capacity, int horsepower, int torque, String fuelType, String cylinderConfiguration, String engineType) {
+    public Engine(BigDecimal capacity, int horsepower, int torque, String fuelType, String cylinderConfiguration, String engineType) {
         this.capacity = capacity;
         this.horsepower = horsepower;
         this.torque = torque;
