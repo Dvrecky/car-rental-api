@@ -11,7 +11,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @SpringBootTest
-public class UserServiceIntegrationTest {
+public class CarServiceIntegrationTest {
 
     @Autowired
     private CarService carService;

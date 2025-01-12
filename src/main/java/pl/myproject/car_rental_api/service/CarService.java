@@ -7,4 +7,6 @@ import java.util.List;
 public interface CarService {
 
     List<CarDTO> getAllCarsWithDetails();
+
+    CarDTO saveCar(CarDTO carDTO);
 }

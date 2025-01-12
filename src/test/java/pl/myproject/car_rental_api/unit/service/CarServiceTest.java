@@ -1,6 +1,8 @@
 package pl.myproject.car_rental_api.unit.service;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
@@ -8,6 +10,9 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
 import pl.myproject.car_rental_api.dto.CarDTO;
+import pl.myproject.car_rental_api.dto.EngineDTO;
+import pl.myproject.car_rental_api.dto.GearboxDTO;
+import pl.myproject.car_rental_api.dto.ModelDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
@@ -17,6 +22,7 @@ import pl.myproject.car_rental_api.service.CarService;
 import pl.myproject.car_rental_api.service.impl.CarServiceImpl;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import java.math.BigDecimal;
@@ -24,7 +30,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest {
+public class CarServiceTest {
 
     @Mock
     private CarRepository carRepository;
@@ -43,6 +49,136 @@ public class UserServiceTest {
 
         carService = new CarServiceImpl(carRepository, modelMapper);
     }
+
+    @Test
+    @Order(1)
+    @DisplayName("Test 1: Saving Car")
+    public void savingCar() {
+
+        // defining DTO objects
+        EngineDTO engineDTO = EngineDTO.builder()
+                .capacity(new BigDecimal("2.0"))
+                .horsepower(150)
+                .torque(300)
+                .fuelType("Diesel")
+                .cylinderConfiguration("Inline")
+                .engineType("Turbocharged")
+                .build();
+
+        GearboxDTO gearboxDTO = GearboxDTO.builder()
+                .name("ZF6HP")
+                .producer("ZF")
+                .numberOfGears(6)
+                .type("Automatic")
+                .build();
+
+        ModelDTO modelDTO = ModelDTO.builder()
+                .name("BMW 320d")
+                .type("Limousine")
+                .productionYear(LocalDate.of(2020, 1, 1))
+                .brand("BMW")
+                .brandCountry("Germany")
+                .color("Black")
+                .typeOfDrive("FWD")
+                .numberOfDoors(4)
+                .bodyType("Sedan")
+                .numberOfSeats(5)
+                .environmentalLabel("Euro 6")
+                .fuelConsumption(new BigDecimal("6"))
+                .CO2Emissions(new BigDecimal("120"))
+                .weight(1500)
+                .accelerationTime(new BigDecimal("8.5"))
+                .photoUrl("https://example.com/photo1.jpg")
+                .averagePrice(30000)
+                .description("A comfortable sedan with modern technologies")
+                .engine(engineDTO)
+                .gearbox(gearboxDTO)
+                .build();
+
+        CarDTO carDTO = CarDTO.builder()
+                .registrationNumber("ABC12345")
+                .lastServiceDate(LocalDate.of(2023, 6, 15))
+                .mileage(50000)
+                .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
+                .rentalPricePerDay(100)
+                .basePrice(25000)
+                .model(modelDTO)
+                .build();
+
+        // defining entities that will be returned by save() method
+        Engine engine = Engine.builder()
+                .id(1)
+                .capacity(new BigDecimal("2.0"))
+                .horsepower(150)
+                .torque(300)
+                .fuelType("Diesel")
+                .cylinderConfiguration("Inline")
+                .engineType("Turbocharged")
+                .build();
+
+        Gearbox gearbox = Gearbox.builder()
+                .id(1)
+                .name("ZF6HP")
+                .producer("ZF")
+                .numberOfGears(6)
+                .type("Automatic")
+                .build();
+
+        Model model = Model.builder()
+                .id(1)
+                .name("BMW 320d")
+                .type("Limousine")
+                .productionYear(LocalDate.of(2020, 1, 1))
+                .brand("BMW")
+                .brandCountry("Germany")
+                .color("Black")
+                .typeOfDrive("FWD")
+                .numberOfDoors(4)
+                .bodyType("Sedan")
+                .numberOfSeats(5)
+                .environmentalLabel("Euro 6")
+                .fuelConsumption(new BigDecimal("6"))
+                .CO2Emissions(new BigDecimal("120"))
+                .weight(1500)
+                .accelerationTime(new BigDecimal("8.5"))
+                .photoUrl("https://example.com/photo1.jpg")
+                .averagePrice(30000)
+                .description("A comfortable sedan with modern technologies")
+                .engine(engine)
+                .gearbox(gearbox)
+                .build();
+
+        Car car = Car.builder()
+                .id(1)
+                .registrationNumber("ABC12345")
+                .lastServiceDate(LocalDate.of(2023, 6, 15))
+                .mileage(50000)
+                .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
+                .rentalPricePerDay(100)
+                .basePrice(25000)
+                .model(model)
+                .build();
+
+        // mocking carRepository.save() method behaviour
+        given(carRepository.save(any(Car.class))).willReturn(car);
+
+        // calling saveCar() method
+        CarDTO result = carService.saveCar(carDTO);
+
+        // checking data correctness
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(1);
+        assertThat(result.getRegistrationNumber()).isEqualTo("ABC12345");
+        assertThat(result.getModel().getName()).isEqualTo("BMW 320d");
+        assertThat(result.getModel().getEngine().getHorsepower()).isEqualTo(150);
+
+        System.out.println("-----------------");
+        System.out.println("-----------------");
+        System.out.println("-----------------");
+
+        System.out.println("CarDTO: " + result);
+    }
+
 
     @Test
     public void returnCarDTOs() {
