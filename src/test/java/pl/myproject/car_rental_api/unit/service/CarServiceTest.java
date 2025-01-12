@@ -1,9 +1,6 @@
 package pl.myproject.car_rental_api.unit.service;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -30,6 +27,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DisplayName("CarService unit tests")
 public class CarServiceTest {
 
     @Mock
@@ -52,8 +51,8 @@ public class CarServiceTest {
 
     @Test
     @Order(1)
-    @DisplayName("Test 1: Saving Car")
-    public void savingCar() {
+    @DisplayName("Test 1: Returning CarDTO after saving do database")
+    public void ReturningCarDTOAfterSavingToDatabase() {
 
         // defining DTO objects
         EngineDTO engineDTO = EngineDTO.builder()
@@ -181,6 +180,8 @@ public class CarServiceTest {
 
 
     @Test
+    @Order(2)
+    @DisplayName("Test 2: Retrieving Car entity and mapping them to DTO")
     public void returnCarDTOs() {
 
         // creating test data
