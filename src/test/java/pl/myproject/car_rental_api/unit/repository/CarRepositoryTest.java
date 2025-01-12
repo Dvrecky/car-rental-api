@@ -3,9 +3,15 @@ package pl.myproject.car_rental_api.unit.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import pl.myproject.car_rental_api.entity.Car;
+import pl.myproject.car_rental_api.entity.Engine;
+import pl.myproject.car_rental_api.entity.Gearbox;
+import pl.myproject.car_rental_api.entity.Model;
 import pl.myproject.car_rental_api.repository.CarRepository;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -15,6 +21,91 @@ public class CarRepositoryTest {
 
     @Autowired
     private CarRepository carRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
+
+    @Test
+    public void insertingCarWithDetails() {
+
+        // creating test data
+        // creating Engine objects
+        Engine engine = Engine.builder()
+                .capacity(new BigDecimal("4.0"))
+                .horsepower(592)
+                .torque(800)
+                .fuelType("Petrol")
+                .cylinderConfiguration("V8")
+                .engineType("Naturally-aspirated")
+                .build();
+
+        // creating Gearbox objects
+        Gearbox gearbox = Gearbox.builder()
+                .name("ZF8HP90")
+                .producer("ZF")
+                .numberOfGears(8)
+                .type("Automatic")
+                .build();
+
+        // creating Model objects
+        Model model = Model.builder()
+                .name("Audi RS6")
+                .type("Sport car")
+                .productionYear(LocalDate.of(2019, 1, 1))
+                .brand("Audi")
+                .brandCountry("Germany")
+                .color("Black")
+                .typeOfDrive("AWD")
+                .numberOfDoors(4)
+                .bodyType("Avant")
+                .numberOfSeats(5)
+                .environmentalLabel("Euro 6")
+                .fuelConsumption(new BigDecimal("12.4"))
+                .CO2Emissions(new BigDecimal("268"))
+                .weight(2075)
+                .accelerationTime(new BigDecimal("3.6"))
+                .photoUrl("https://example.com/photo3.jpg")
+                .averagePrice(30000)
+                .description("A comfortable and super fast family car")
+                .engine(engine)
+                .gearbox(gearbox)
+                .build();
+
+        // creating Car objects
+        Car car = Car.builder()
+                .registrationNumber("QWER123")
+                .lastServiceDate(LocalDate.of(2023, 6, 15))
+                .mileage(50000)
+                .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
+                .rentalPricePerDay(100)
+                .basePrice(25000)
+                .model(model)
+                .build();
+
+        // saving car entity with related entities
+        Car testCar = carRepository.save(car);
+
+        // retrieving saved car entity
+        Car retrievedCar = entityManager.find(Car.class, testCar.getId());
+
+        // checking if related entities exists
+        assertThat(retrievedCar).isNotNull();
+        assertThat(retrievedCar.getModel()).isNotNull();
+        assertThat(retrievedCar.getModel().getEngine()).isNotNull();
+        assertThat(retrievedCar.getModel().getGearbox()).isNotNull();
+
+        // checking if related entities has been saved correctly
+        assertThat(retrievedCar.getRegistrationNumber()).isEqualTo(testCar.getRegistrationNumber());
+        assertThat(retrievedCar.getModel().getName()).isEqualTo(testCar.getModel().getName());
+        assertThat(retrievedCar.getModel().getEngine().getCapacity()).isEqualTo(testCar.getModel().getEngine().getCapacity());
+        assertThat(retrievedCar.getModel().getGearbox().getNumberOfGears()).isEqualTo(testCar.getModel().getGearbox().getNumberOfGears());
+
+        System.out.println("-------------------------------------");
+        System.out.println("-------------------------------------");
+        System.out.println("-------------------------------------");
+
+        System.out.println("Saved car: " + retrievedCar);
+    }
 
     @Test
     public void getAllCarsWithDetails() {
@@ -56,4 +147,6 @@ public class CarRepositoryTest {
             System.out.println();
         }
     }
+
+
 }
