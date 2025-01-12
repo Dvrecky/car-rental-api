@@ -1,9 +1,10 @@
 package pl.myproject.car_rental_api.unit.repository;
 
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
+import org.springframework.test.annotation.Rollback;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
@@ -17,6 +18,8 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DisplayName("CarRepository unit tests")
 public class CarRepositoryTest {
 
     @Autowired
@@ -26,6 +29,9 @@ public class CarRepositoryTest {
     private TestEntityManager entityManager;
 
     @Test
+    @Order(1)
+    @DisplayName("Test1: Saving Car entity with related entities")
+    @Rollback(value = false)
     public void insertingCarWithDetails() {
 
         // creating test data
@@ -108,6 +114,8 @@ public class CarRepositoryTest {
     }
 
     @Test
+    @Order(2)
+    @DisplayName("Test 2: Retrieving Car entity with related entities")
     public void getAllCarsWithDetails() {
 
         // retrieving list of cars with related engine and gearbix
@@ -117,7 +125,7 @@ public class CarRepositoryTest {
         assertThat(carList).isNotNull();
 
         // checking if carList has 3 cars
-        assertThat(carList).hasSize(3);
+        assertThat(carList).hasSize(4);
 
         // getting a car with given registration number
         Car testCar = carList.stream()
