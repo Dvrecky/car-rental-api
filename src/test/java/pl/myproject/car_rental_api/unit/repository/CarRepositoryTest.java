@@ -14,6 +14,7 @@ import pl.myproject.car_rental_api.repository.CarRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -115,7 +116,31 @@ public class CarRepositoryTest {
 
     @Test
     @Order(2)
-    @DisplayName("Test 2: Retrieving Car entity with related entities")
+    @DisplayName("Test 2: finding car id")
+    public void findCarById() {
+
+        int id = 4;
+        Car car = carRepository.findByIdWithDetails(id).orElseThrow(() ->
+            new IllegalStateException("Car with id: " + id + " not found")
+        );
+
+
+        assertThat(car.getId()).isEqualTo(4);
+        assertThat(car.getRegistrationNumber()).isEqualTo("QWER123");
+        assertThat(car.getModel().getBodyType()).isEqualTo("Avant");
+        assertThat(car.getModel().getEngine().getCapacity()).isEqualTo("4.0");
+        assertThat(car.getModel().getGearbox().getNumberOfGears()).isEqualTo(8);
+
+        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------");
+        System.out.println("--------------------------------------");
+        System.out.println("Found car: " + car);
+
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test 3: Retrieving Car entity with related entities")
     public void getAllCarsWithDetails() {
 
         // retrieving list of cars with related engine and gearbix
