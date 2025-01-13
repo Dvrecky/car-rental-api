@@ -30,7 +30,7 @@ public class CarRepositoryTest {
 
     @Test
     @Order(1)
-    @DisplayName("Test1: Saving Car entity with related entities")
+    @DisplayName("Test 1: Saving Car entity with related entities")
     @Rollback(value = false)
     public void insertingCarWithDetails() {
 

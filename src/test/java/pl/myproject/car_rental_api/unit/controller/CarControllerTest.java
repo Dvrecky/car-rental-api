@@ -155,7 +155,7 @@ public class CarControllerTest {
         // mocking carService.saveCar() behaviour to return carDTO with id value
         given(carService.saveCar(any(CarDTO.class))).willReturn(carDTO1);
 
-        // sending post request to "/api/cars"
+        // sending POST request to "/api/cars"
         ResultActions result = mockMvc.perform(post("/api/cars")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(carDTO)));
