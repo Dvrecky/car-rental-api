@@ -37,4 +37,10 @@ public class CarServiceImpl implements CarService {
         Car newCar = carRepository.save(car);
         return modelMapper.map(newCar, CarDTO.class);
     }
+
+    @Override
+    public CarDTO getCarByIdWithDetails(int id) {
+        Car car = carRepository.findByIdWithDetails(id).get();
+        return modelMapper.map(car, CarDTO.class);
+    }
 }
