@@ -43,4 +43,9 @@ public class CarServiceImpl implements CarService {
         Car car = carRepository.findByIdWithDetails(id).get();
         return modelMapper.map(car, CarDTO.class);
     }
+
+    @Override
+    public void deleteCarById(int id) {
+        carRepository.deleteById(id);
+    }
 }

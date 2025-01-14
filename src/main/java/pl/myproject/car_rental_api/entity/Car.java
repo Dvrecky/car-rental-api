@@ -53,7 +53,7 @@ public class Car {
     @Column(name = "base_price")
     private int basePrice;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "model_id")
     private Model model;
 

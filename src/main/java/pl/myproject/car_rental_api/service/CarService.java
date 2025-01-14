@@ -11,4 +11,6 @@ public interface CarService {
     CarDTO saveCar(CarDTO carDTO);
 
     CarDTO getCarByIdWithDetails(int id);
+
+    void deleteCarById(int id);
 }

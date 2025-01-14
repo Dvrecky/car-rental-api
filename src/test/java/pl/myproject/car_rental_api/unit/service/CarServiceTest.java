@@ -21,6 +21,8 @@ import pl.myproject.car_rental_api.service.impl.CarServiceImpl;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -263,7 +265,23 @@ public class CarServiceTest {
 
     @Test
     @Order(3)
-    @DisplayName("Test 3: Retrieving Car entity and mapping them to DTO")
+    @DisplayName("Test 3: delete Car by ID")
+    public void deleteCarById() {
+
+        // mocking carRepository behaviour
+        int id = 1;
+        willDoNothing().given(carRepository).deleteById(id);
+
+        // calling service method for deleting
+        carService.deleteCarById(id);
+
+        // verifying if carRepository.deleteById() method has been invoked once
+        verify(carRepository, times(1)).deleteById(id);
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test 4: Retrieving Car entity and mapping them to DTO")
     public void returnCarDTOs() {
 
         // creating test data

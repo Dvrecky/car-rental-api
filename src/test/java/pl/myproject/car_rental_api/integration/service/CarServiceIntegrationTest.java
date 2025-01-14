@@ -102,12 +102,12 @@ public class CarServiceIntegrationTest {
     public void getCarDTOById() {
 
         // calling service method
-        int i = 4;
-        CarDTO carDTO = carService.getCarByIdWithDetails(i);
+        int id = 4;
+        CarDTO carDTO = carService.getCarByIdWithDetails(id);
 
         // checking data correctness
         assertThat(carDTO).isNotNull();
-        assertThat(carDTO.getId()).isEqualTo(i);
+        assertThat(carDTO.getId()).isEqualTo(id);
         assertThat(carDTO.getRegistrationNumber()).isEqualTo("ABC12345");
         assertThat(carDTO.getModel().getName()).isEqualTo("BMW 320d");
         assertThat(carDTO.getModel().getEngine().getFuelType()).isEqualTo("Diesel");
@@ -122,6 +122,25 @@ public class CarServiceIntegrationTest {
 
     @Test
     @Order(3)
+    @DisplayName("Test 3: Deleting car by ID")
+    public void deleteCarById() {
+
+        // deleting car with given ID
+        int id = 4;
+        carService.deleteCarById(id);
+
+        List<CarDTO> carDTOs = carService.getAllCarsWithDetails();
+
+        CarDTO testCarDTO = carDTOs.stream()
+                .filter( carDTO -> carDTO.getId() == id)
+                .findFirst()
+                .orElse(null);
+
+        assertThat(testCarDTO).isNull();
+    }
+
+    @Test
+    @Order(3)
     @DisplayName("Test 3: Retrieving Car entity and mapping them to DTO")
     public void getCarDTOs() {
 
@@ -131,7 +150,7 @@ public class CarServiceIntegrationTest {
         // checking if list is not null
         assertThat(carDTOList).isNotNull();
         // checking if number of elements is correct
-        assertThat(carDTOList.size()).isEqualTo(4);
+        assertThat(carDTOList.size()).isEqualTo(3);
 
         // getting a carDTO with given registration number
         CarDTO testCarDTO = carDTOList.stream()
