@@ -17,10 +17,10 @@ import pl.myproject.car_rental_api.dto.ModelDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -129,7 +129,21 @@ public class CarControllerIntegrationTest {
 
     @Test
     @Order(3)
-    @DisplayName("Test 3: Getting CarDTOs list")
+    @DisplayName("Test 3: Deleting car by ID")
+    public void deletingCarById() throws Exception{
+
+        int id = 4;
+        // sending DELETE request to "/api/cars/{id}"
+        ResultActions response = mockMvc.perform(delete("/api/cars/{id}", id));
+
+        // checking data correctness
+        response.andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test 4: Getting CarDTOs list")
     public void getCarDTOs() throws Exception {
 
         // sending GET request to "/api/cars"
@@ -138,7 +152,7 @@ public class CarControllerIntegrationTest {
         // checking data correctness
         response.andExpect(status().isOk())
                 .andDo(print())
-                .andExpect(jsonPath("$.size()", is(4)))
+                .andExpect(jsonPath("$.size()", is(3)))
                 .andExpect(jsonPath("$[1].id", is(2)))
                 .andExpect(jsonPath("$[1].registrationNumber", is("XYZ5678")))
                 .andExpect(jsonPath("$[1].model.brand", is("BrandB")))
