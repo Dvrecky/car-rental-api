@@ -46,4 +46,11 @@ public class CarController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCarDTO);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deleteCarById(@PathVariable int id) {
+        carService.deleteCarById(id);
+
+        return ResponseEntity.ok("Car with ID: " + id + " removed successfully");
+    }
 }

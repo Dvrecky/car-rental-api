@@ -16,8 +16,8 @@ import pl.myproject.car_rental_api.dto.ModelDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
 import static org.mockito.ArgumentMatchers.any;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -249,7 +249,24 @@ public class CarControllerTest {
 
     @Test
     @Order(3)
-    @DisplayName("Test 3: getting carDTOs")
+    @DisplayName("Test 3: Deleting Car by ID")
+    public void deletingCarById() throws Exception{
+
+        int id = 3;
+        // mocking carService.deleteCarById() method
+        willDoNothing().given(carService).deleteCarById(id);
+
+        // sending DELETE request to "/api/cars/{id}"
+        ResultActions response = mockMvc.perform(delete("/api/cars/{id}", id));
+
+        // checking data correctness
+        response.andExpect(status().isOk())
+                .andDo(print());
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test 4: getting carDTOs")
     public void getCarsDTO() throws Exception{
 
         // creating test data
