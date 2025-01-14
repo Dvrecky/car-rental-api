@@ -98,7 +98,31 @@ public class CarServiceIntegrationTest {
 
     @Test
     @Order(2)
-    @DisplayName("Test 2: Retrieving Car entity and mapping them to DTO")
+    @DisplayName("Test 2: Getting CarDTO by id")
+    public void getCarDTOById() {
+
+        // calling service method
+        int i = 4;
+        CarDTO carDTO = carService.getCarByIdWithDetails(i);
+
+        // checking data correctness
+        assertThat(carDTO).isNotNull();
+        assertThat(carDTO.getId()).isEqualTo(i);
+        assertThat(carDTO.getRegistrationNumber()).isEqualTo("ABC12345");
+        assertThat(carDTO.getModel().getName()).isEqualTo("BMW 320d");
+        assertThat(carDTO.getModel().getEngine().getFuelType()).isEqualTo("Diesel");
+        assertThat(carDTO.getModel().getGearbox().getProducer()).isEqualTo("ZF");
+
+        // printing out carDTO
+        System.out.println("----------------------");
+        System.out.println("----------------------");
+        System.out.println("----------------------");
+        System.out.println("CarDTO: " + carDTO);
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test 3: Retrieving Car entity and mapping them to DTO")
     public void getCarDTOs() {
 
         // getting cars DTO
