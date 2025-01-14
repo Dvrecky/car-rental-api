@@ -14,6 +14,7 @@ import pl.myproject.car_rental_api.repository.CarRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -139,7 +140,21 @@ public class CarRepositoryTest {
 
     @Test
     @Order(3)
-    @DisplayName("Test 3: Retrieving Car entity with related entities")
+    @DisplayName("Test 3: Deleting Car entity by id")
+    @Rollback(value = false)
+    public void deletingCarById() {
+
+        // removing car and related entities with given car id
+        int id = 3;
+        carRepository.deleteById(id);
+
+        Optional<Car> carOptional = carRepository.findByIdWithDetails(id);
+        assertThat(carOptional).isEmpty();
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test 4: Retrieving Car entity with related entities")
     public void getAllCarsWithDetails() {
 
         // retrieving list of cars with related engine and gearbix
@@ -149,7 +164,7 @@ public class CarRepositoryTest {
         assertThat(carList).isNotNull();
 
         // checking if carList has 3 cars
-        assertThat(carList).hasSize(4);
+        assertThat(carList).hasSize(3);
 
         // getting a car with given registration number
         Car testCar = carList.stream()

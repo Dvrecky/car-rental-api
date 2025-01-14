@@ -75,11 +75,11 @@ public class Model {
     @Column(name = "description")
     private String description;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "engine_id")
     private Engine engine;
 
-    @OneToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE})
     @JoinColumn(name = "gearbox_id")
     private Gearbox gearbox;
 
