@@ -172,7 +172,84 @@ public class CarControllerTest {
 
     @Test
     @Order(2)
-    @DisplayName("Test 2: getting carDTOs")
+    @DisplayName("Test 2: Getting CarDTO by ID")
+    public void getCarDTO() throws Exception{
+
+        int i = 1;
+
+        // defining DTO objects which will be returned by service findCarByIdWithDetails() method
+        EngineDTO engineDTO = EngineDTO.builder()
+                .id(i)
+                .capacity(new BigDecimal("2.0"))
+                .horsepower(150)
+                .torque(300)
+                .fuelType("Diesel")
+                .cylinderConfiguration("Inline")
+                .engineType("Turbocharged")
+                .build();
+
+        GearboxDTO gearboxDTO = GearboxDTO.builder()
+                .id(i)
+                .name("ZF6HP")
+                .producer("ZF")
+                .numberOfGears(6)
+                .type("Automatic")
+                .build();
+
+        ModelDTO modelDTO = ModelDTO.builder()
+                .id(i)
+                .name("BMW 320d")
+                .type("Limousine")
+                .productionYear(LocalDate.of(2020, 1, 1))
+                .brand("BMW")
+                .brandCountry("Germany")
+                .color("Black")
+                .typeOfDrive("FWD")
+                .numberOfDoors(4)
+                .bodyType("Sedan")
+                .numberOfSeats(5)
+                .environmentalLabel("Euro 6")
+                .fuelConsumption(new BigDecimal("6"))
+                .CO2Emissions(new BigDecimal("120"))
+                .weight(1500)
+                .accelerationTime(new BigDecimal("8.5"))
+                .photoUrl("https://example.com/photo1.jpg")
+                .averagePrice(30000)
+                .description("A comfortable sedan with modern technologies")
+                .engine(engineDTO)
+                .gearbox(gearboxDTO)
+                .build();
+
+        CarDTO carDTO = CarDTO.builder()
+                .id(i)
+                .registrationNumber("ABC12345")
+                .lastServiceDate(LocalDate.of(2023, 6, 15))
+                .mileage(50000)
+                .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
+                .rentalPricePerDay(100)
+                .basePrice(25000)
+                .model(modelDTO)
+                .build();
+
+        // mocking carService.getCarByIdWithDetails() behaviour to return carDTO
+        given(carService.getCarByIdWithDetails(i)).willReturn(carDTO);
+
+        // sending GET request to "/api/cars/{id}"
+        ResultActions response = mockMvc.perform(get("/api/cars/{id}", i));
+
+        // checking data correctness
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.id", is(i)))
+                .andExpect(jsonPath("$.registrationNumber", is("ABC12345")))
+                .andExpect(jsonPath("$.model.color", is("Black")))
+                .andExpect(jsonPath("$.model.engine.fuelType", is("Diesel")))
+                .andExpect(jsonPath("$.model.gearbox.type", is("Automatic")));
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test 3: getting carDTOs")
     public void getCarsDTO() throws Exception{
 
         // creating test data
