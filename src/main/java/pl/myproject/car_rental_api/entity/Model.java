@@ -75,11 +75,11 @@ public class Model {
     @Column(name = "description")
     private String description;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "engine_id")
     private Engine engine;
 
-    @ManyToOne(cascade = CascadeType.PERSIST)
+    @OneToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "gearbox_id")
     private Gearbox gearbox;
 
