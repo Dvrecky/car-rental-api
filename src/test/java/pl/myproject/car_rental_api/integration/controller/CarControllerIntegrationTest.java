@@ -110,11 +110,32 @@ public class CarControllerIntegrationTest {
 
     @Test
     @Order(2)
-    @DisplayName("Test 2: Getting CarDTOs list")
+    @DisplayName("Test 3: Getting Car by ID and mapping to DTO")
+    public void getCarDTOById() throws Exception{
+
+        int i = 4;
+        // sending GET request to "/api/cars/{id}"
+        ResultActions response = mockMvc.perform(get("/api/cars/{i}", i));
+
+        // checking data correctness
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.id", is(i)))
+                .andExpect(jsonPath("$.registrationNumber", is("QWER123")))
+                .andExpect(jsonPath("$.model.brandCountry", is("Germany")))
+                .andExpect(jsonPath("$.model.engine.torque", is(800)))
+                .andExpect(jsonPath("$.model.gearbox.type" , is("Automatic")));
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test 3: Getting CarDTOs list")
     public void getCarDTOs() throws Exception {
 
+        // sending GET request to "/api/cars"
         ResultActions response = mockMvc.perform(get("/api/cars"));
 
+        // checking data correctness
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(4)))
