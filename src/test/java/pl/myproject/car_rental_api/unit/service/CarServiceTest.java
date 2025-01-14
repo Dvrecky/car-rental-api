@@ -25,6 +25,7 @@ import static org.mockito.BDDMockito.given;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 @ExtendWith(MockitoExtension.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -178,10 +179,91 @@ public class CarServiceTest {
         System.out.println("CarDTO: " + result);
     }
 
-
     @Test
     @Order(2)
-    @DisplayName("Test 2: Retrieving Car entity and mapping them to DTO")
+    @DisplayName("Test 2: Getting CarDTO by id")
+    public void returnCarDTOById() {
+
+        int i = 1;
+
+        // defining entities that will be returned by findCarByIdWithDetails() method
+        Engine engine = Engine.builder()
+                .id(i)
+                .capacity(new BigDecimal("2.0"))
+                .horsepower(150)
+                .torque(300)
+                .fuelType("Diesel")
+                .cylinderConfiguration("Inline")
+                .engineType("Turbocharged")
+                .build();
+
+        Gearbox gearbox = Gearbox.builder()
+                .id(i)
+                .name("ZF6HP")
+                .producer("ZF")
+                .numberOfGears(6)
+                .type("Automatic")
+                .build();
+
+        Model model = Model.builder()
+                .id(i)
+                .name("BMW 320d")
+                .type("Limousine")
+                .productionYear(LocalDate.of(2020, 1, 1))
+                .brand("BMW")
+                .brandCountry("Germany")
+                .color("Black")
+                .typeOfDrive("FWD")
+                .numberOfDoors(4)
+                .bodyType("Sedan")
+                .numberOfSeats(5)
+                .environmentalLabel("Euro 6")
+                .fuelConsumption(new BigDecimal("6"))
+                .CO2Emissions(new BigDecimal("120"))
+                .weight(1500)
+                .accelerationTime(new BigDecimal("8.5"))
+                .photoUrl("https://example.com/photo1.jpg")
+                .averagePrice(30000)
+                .description("A comfortable sedan with modern technologies")
+                .engine(engine)
+                .gearbox(gearbox)
+                .build();
+
+        Car car = Car.builder()
+                .id(i)
+                .registrationNumber("ABC12345")
+                .lastServiceDate(LocalDate.of(2023, 6, 15))
+                .mileage(50000)
+                .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
+                .rentalPricePerDay(100)
+                .basePrice(25000)
+                .model(model)
+                .build();
+
+        // mocking carRepository behaviour to return car entity
+        given(carRepository.findByIdWithDetails(i)).willReturn(Optional.of(car));
+
+        // calling service method
+        CarDTO result = carService.getCarByIdWithDetails(i);
+
+        // checking data correctness
+        assertThat(result).isNotNull();
+        assertThat(result.getId()).isEqualTo(i);
+        assertThat(result.getRegistrationNumber()).isEqualTo("ABC12345");
+        assertThat(result.getModel().getBrandCountry()).isEqualTo("Germany");
+        assertThat(result.getModel().getEngine().getEngineType()).isEqualTo("Turbocharged");
+        assertThat(result.getModel().getGearbox().getProducer()).isEqualTo("ZF");
+
+        // printing out the result
+        System.out.println("---------------------------------------");
+        System.out.println("---------------------------------------");
+        System.out.println("---------------------------------------");
+        System.out.println("CarDTO: " + result);
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test 3: Retrieving Car entity and mapping them to DTO")
     public void returnCarDTOs() {
 
         // creating test data
