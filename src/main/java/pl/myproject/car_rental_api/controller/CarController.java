@@ -29,6 +29,14 @@ public class CarController {
         return ResponseEntity.ok(carDTOS);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<CarDTO> getCarById(@PathVariable int id) {
+
+        CarDTO carDTO = carService.getCarByIdWithDetails(id);
+
+        return ResponseEntity.ok(carDTO);
+    }
+
     @PostMapping
     public ResponseEntity<CarDTO> addCarWithDetails(@RequestBody CarDTO carDTO) {
 
