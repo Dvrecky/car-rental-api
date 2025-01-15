@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.myproject.car_rental_api.dto.CarDTO;
+import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.util.List;
@@ -45,6 +46,12 @@ public class CarController {
         CarDTO savedCarDTO = carService.saveCar(carDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(savedCarDTO);
+    }
+
+    @PutMapping
+    public ResponseEntity<CarDTO> updateCar(@RequestBody CarDTO carDTO) {
+        CarDTO updatedCarDTO = carService.updateCar(carDTO);
+        return ResponseEntity.ok(updatedCarDTO);
     }
 
     @DeleteMapping("/{id}")
