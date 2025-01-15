@@ -18,6 +18,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.InstanceOfAssertFactories.spliterator;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -174,7 +175,104 @@ public class CarRepositoryTest {
 
     @Test
     @Order(5)
-    @DisplayName("Test 5: Retrieving Car entity with related entities")
+    @DisplayName("Test 5: Updating Car entity")
+    @Rollback(value = false)
+    public void updateExistingCarEntity() {
+
+        // creating test entities
+        Engine engine = Engine.builder()
+                .id(2)
+                .capacity(new BigDecimal("2.0"))
+                .horsepower(250)
+                .torque(500)
+                .fuelType("Diesel")
+                .cylinderConfiguration("V6")
+                .engineType("Naturally-aspirated")
+                .build();
+
+        Gearbox gearbox = Gearbox.builder()
+                .id(3)
+                .name("CVT")
+                .producer("Jatco")
+                .numberOfGears(8)
+                .type("CVT")
+                .build();
+
+        Model model = Model.builder()
+                .id(2)
+                .name("Model B")
+                .type("SUV")
+                .productionYear(LocalDate.of(2021, 11, 15))
+                .brand("BrandB")
+                .brandCountry("USA")
+                .color("Yellow")
+                .typeOfDrive("AWD")
+                .numberOfDoors(5)
+                .bodyType("SUV")
+                .numberOfSeats(7)
+                .environmentalLabel("Euro 5")
+                .fuelConsumption(new BigDecimal("8.2"))
+                .CO2Emissions(new BigDecimal("200"))
+                .weight(1800)
+                .accelerationTime(new BigDecimal("10.2"))
+                .photoUrl("https://example.com/photoB.jpg")
+                .averagePrice(30000)
+                .description("A family SUV offering great comfort and space.")
+                .engine(engine)
+                .gearbox(gearbox)
+                .build();
+
+        Car testCar = Car.builder()
+                .id(2)
+                .registrationNumber("XYZ5678")
+                .vin("2C3KA53G76H654321")
+                .lastServiceDate(LocalDate.of(2024, 11, 15))
+                .mileage(20000) // było 18000
+                .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
+                .rentalPricePerDay(150)
+                .basePrice(35000)
+                .model(model)
+                .build();
+
+        // retrieving car with given ID
+        int id = 2;
+        Car car = carRepository.findByIdWithDetails(id)
+                                        .orElseThrow( () -> new NoSuchElementException("Car not found for ID: " + id));
+
+        // printing Car data
+        System.out.println("Car mileage before update: " + car.getMileage());
+        System.out.println("Car color before update: " + car.getModel().getColor());
+        System.out.println("Car engine capacity before update: " + car.getModel().getEngine().getCapacity());
+        System.out.println("Car number of gears before update: " + car.getModel().getGearbox().getNumberOfGears());
+        System.out.println("Car before update: " + car);
+
+        // updating Car entity with related entities
+        Car updatedCar = carRepository.save(testCar);
+
+        // printing updated Car data
+        System.out.println("Car mileage after update: " + updatedCar.getMileage());
+        System.out.println("Car color after update: " + updatedCar.getModel().getColor());
+        System.out.println("Car engine capacity after update: " + updatedCar.getModel().getEngine().getCapacity());
+        System.out.println("Car number of gears after update: " + updatedCar.getModel().getGearbox().getNumberOfGears());
+
+        // checking if Car and related entities has been updated correctly
+        assertThat(updatedCar.getMileage()).isEqualTo(20000);
+        assertThat(updatedCar.getModel().getColor()).isEqualTo("Yellow");
+        assertThat(updatedCar.getModel().getEngine().getCapacity()).isEqualTo(BigDecimal.valueOf(2.0));
+        assertThat(updatedCar.getModel().getGearbox().getNumberOfGears()).isEqualTo(8);
+
+        // printing updated car
+        System.out.println("----------------------------");
+        System.out.println("----------------------------");
+        System.out.println("----------------------------");
+        System.out.println("Updated car: " + updatedCar);
+
+
+    }
+
+    @Test
+    @Order(6)
+    @DisplayName("Test 6: Retrieving Car entity with related entities")
     public void getAllCarsWithDetails() {
 
         // retrieving list of cars with related engine and gearbix
