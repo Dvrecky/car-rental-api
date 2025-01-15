@@ -71,6 +71,7 @@ public class CarServiceIntegrationTest {
 
         CarDTO carDTO = CarDTO.builder()
                 .registrationNumber("ABC12345")
+                .vin("WBA3D31000F300276")
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
                 .mileage(50000)
                 .insuranceExpiryDate(LocalDate.of(2025, 12, 31))

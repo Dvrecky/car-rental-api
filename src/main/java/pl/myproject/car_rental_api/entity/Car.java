@@ -38,6 +38,9 @@ public class Car {
     @Column(name = "registration_number")
     private String registrationNumber;
 
+    @Column(name = "vin")
+    private String vin;
+
     @Column(name = "last_service_date")
     private LocalDate lastServiceDate;
 

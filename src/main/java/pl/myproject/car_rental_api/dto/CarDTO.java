@@ -14,6 +14,7 @@ public class CarDTO {
 
     private int id;
     private String registrationNumber;
+    private String vin;
     private LocalDate lastServiceDate;
     private int mileage;
     private LocalDate insuranceExpiryDate;

@@ -58,6 +58,7 @@ CREATE TABLE models(
 CREATE TABLE cars (
     id INT PRIMARY KEY AUTO_INCREMENT,
     registration_number VARCHAR(7) UNIQUE NOT NULL,
+    vin VARCHAR(17) UNIQUE NOT NULL,
     last_service_date DATE NOT NULL,
     mileage INT NOT NULL,
     insurance_expiry_date DATE NOT NULL,

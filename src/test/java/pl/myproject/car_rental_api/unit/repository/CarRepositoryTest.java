@@ -81,6 +81,7 @@ public class CarRepositoryTest {
         // creating Car objects
         Car car = Car.builder()
                 .registrationNumber("QWER123")
+                .vin("WUAZZZF21SN903325")
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
                 .mileage(50000)
                 .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
