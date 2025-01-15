@@ -14,6 +14,7 @@ import pl.myproject.car_rental_api.repository.CarRepository;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -125,7 +126,6 @@ public class CarRepositoryTest {
             new IllegalStateException("Car with id: " + id + " not found")
         );
 
-
         assertThat(car.getId()).isEqualTo(4);
         assertThat(car.getRegistrationNumber()).isEqualTo("QWER123");
         assertThat(car.getModel().getBodyType()).isEqualTo("Avant");
@@ -141,7 +141,26 @@ public class CarRepositoryTest {
 
     @Test
     @Order(3)
-    @DisplayName("Test 3: Deleting Car entity by id")
+    @DisplayName("Test 3: find Car entity by VIN")
+    public void findCarByVin() {
+
+        String vin = "WUAZZZF21SN903325";
+        Car car = carRepository.findByVin(vin)
+                                    .orElseThrow( () -> new NoSuchElementException("Car not found for vin: " + vin));
+
+        assertThat(car.getVin()).isEqualTo(vin);
+        assertThat(car.getRegistrationNumber()).isEqualTo("QWER123");
+
+        System.out.println("------------------------------");
+        System.out.println("------------------------------");
+        System.out.println("------------------------------");
+        System.out.println("Car: " + car.toStringDetails());
+
+    }
+
+    @Test
+    @Order(4)
+    @DisplayName("Test 4: Deleting Car entity by id")
     @Rollback(value = false)
     public void deletingCarById() {
 
@@ -154,8 +173,8 @@ public class CarRepositoryTest {
     }
 
     @Test
-    @Order(4)
-    @DisplayName("Test 4: Retrieving Car entity with related entities")
+    @Order(5)
+    @DisplayName("Test 5: Retrieving Car entity with related entities")
     public void getAllCarsWithDetails() {
 
         // retrieving list of cars with related engine and gearbix

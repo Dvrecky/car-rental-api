@@ -56,7 +56,7 @@ public class Car {
     @Column(name = "base_price")
     private int basePrice;
 
-    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
+    @OneToOne(fetch = FetchType.LAZY, cascade = {CascadeType.PERSIST, CascadeType.REMOVE}, orphanRemoval = true)
     @JoinColumn(name = "model_id")
     private Model model;
 
@@ -78,4 +78,18 @@ public class Car {
         this.rentalPricePerDay = rentalPricePerDay;
         this.basePrice = basePrice;
     }
+
+    public String toStringDetails() {
+        return "Car{" +
+                "id=" + id +
+                ", registrationNumber='" + registrationNumber + '\'' +
+                ", vin='" + vin + '\'' +
+                ", lastServiceDate=" + lastServiceDate +
+                ", mileage=" + mileage +
+                ", insuranceExpiryDate=" + insuranceExpiryDate +
+                ", rentalPricePerDay=" + rentalPricePerDay +
+                ", basePrice=" + basePrice +
+                '}';
+    }
+
 }
