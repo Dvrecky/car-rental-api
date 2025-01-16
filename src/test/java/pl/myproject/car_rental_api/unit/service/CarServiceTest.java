@@ -14,6 +14,7 @@ import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
 import pl.myproject.car_rental_api.entity.Model;
+import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
 import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.service.CarService;
 import pl.myproject.car_rental_api.service.impl.CarServiceImpl;
@@ -41,6 +42,8 @@ public class CarServiceTest {
 
     private ModelMapper modelMapper;
 
+    private CarAvailabilityRepository carAvailabilityRepository;
+
     @BeforeEach
     public void setup() {
 
@@ -49,7 +52,7 @@ public class CarServiceTest {
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
 
-        carService = new CarServiceImpl(carRepository, modelMapper);
+        carService = new CarServiceImpl(carRepository, modelMapper, carAvailabilityRepository);
     }
 
     @Test

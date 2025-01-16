@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.entity.Car;
+import pl.myproject.car_rental_api.dto.StatusDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.util.List;
@@ -36,6 +36,14 @@ public class CarController {
         CarDTO carDTO = carService.getCarByIdWithDetails(id);
 
         return ResponseEntity.ok(carDTO);
+    }
+
+    @GetMapping("/{id}/availability")
+    public ResponseEntity<List<StatusDTO>> getCarAvailabilties(@PathVariable long id) {
+
+        List<StatusDTO> statusDTOS = carService.getCarAvailabilityList(id);
+
+        return ResponseEntity.ok(statusDTOS);
     }
 
     @PostMapping
