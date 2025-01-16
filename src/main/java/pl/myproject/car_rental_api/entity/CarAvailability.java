@@ -10,10 +10,11 @@ import java.time.LocalDate;
 @AllArgsConstructor
 @Getter
 @Setter
+@ToString
 @Entity
 @Table(name = "car_availability")
 public class CarAvailability {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -22,10 +23,10 @@ public class CarAvailability {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "from")
+    @Column(name = "from_date")
     private LocalDate from;
 
-    @Column(name = "to")
+    @Column(name = "to_date")
     private LocalDate to;
 
     @ManyToOne

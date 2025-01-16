@@ -83,9 +83,9 @@ CREATE TABLE car_availability (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     car_id INT NOT NULL,
     status VARCHAR(30) NOT NULL,
-    `from` DATETIME NOT NULL,
-    `to` DATETIME NOT NULL,
-    
+    from_date DATETIME NOT NULL,
+    to_date DATETIME NOT NULL,
+
     CONSTRAINT FK_CarAvailability FOREIGN KEY (car_id) REFERENCES cars(id)
 );
 
