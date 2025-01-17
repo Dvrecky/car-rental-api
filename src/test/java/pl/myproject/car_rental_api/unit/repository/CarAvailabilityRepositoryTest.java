@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
+import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
 
@@ -13,12 +14,16 @@ import java.util.List;
 import java.util.NoSuchElementException;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 
 @DataJpaTest
 public class CarAvailabilityRepositoryTest {
 
     @Autowired
     private CarAvailabilityRepository carAvailabilityRepository;
+
+    @Autowired
+    private TestEntityManager entityManager;
 
     @Test
     @Order(1)
@@ -73,5 +78,31 @@ public class CarAvailabilityRepositoryTest {
         System.out.println("------------------------");
         System.out.println("------------------------");
         System.out.println("Car is available between: " + from + " and " + to);
+    }
+
+    @Test
+    @Order(3)
+    @DisplayName("Test 3: Updating end date with new date")
+    public void updateEndDate() {
+
+        // updating end date with new date
+        int carAvailabilityId = 1;
+        LocalDate newEndDate = LocalDate.of(2025, 01,14);
+        carAvailabilityRepository.updateEndDate(newEndDate, carAvailabilityId);
+
+        // retrieving car availability with entityManger
+        CarAvailability carAv = entityManager.find(CarAvailability.class, carAvailabilityId);
+
+        // checking data correctness
+        assertThat(carAv.getEndDate()).isEqualTo(newEndDate);
+        assertThat(carAv.getStartDate()).isEqualTo(LocalDate.of(2025, 01, 01));
+        assertThat(carAv.getStatus()).isEqualTo("AVAILABLE");
+
+        // printing out data
+        System.out.println("------------------------------");
+        System.out.println("------------------------------");
+        System.out.println("------------------------------");
+        System.out.println("Car status: " + carAv.getStatus() + " start date: " + carAv.getStartDate() +
+                " end date: " + carAv.getEndDate());
     }
 }
