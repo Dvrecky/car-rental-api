@@ -23,11 +23,11 @@ public class CarAvailability {
     @Column(name = "status")
     private String status;
 
-    @Column(name = "from_date")
-    private LocalDate from;
+    @Column(name = "start_date")
+    private LocalDate startDate;
 
-    @Column(name = "to_date")
-    private LocalDate to;
+    @Column(name = "end_date")
+    private LocalDate endDate;
 
     @ManyToOne
     @JoinColumn(name = "car_id")

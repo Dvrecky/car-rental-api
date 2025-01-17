@@ -65,7 +65,7 @@ public class CarServiceImpl implements CarService {
     public List<StatusDTO> getCarAvailabilityList(long carId){
         List<CarAvailability> carAvailabilities = carAvailabilityRepository.findAllByCarId(carId);
         List<StatusDTO> carAvailabilityList = carAvailabilities.stream()
-                .map(carAv -> new StatusDTO(carAv.getFrom(), carAv.getTo(), carAv.getStatus()))
+                .map(carAv -> new StatusDTO(carAv.getStartDate(), carAv.getEndDate(), carAv.getStatus()))
                 .toList();
         return carAvailabilityList;
     }
