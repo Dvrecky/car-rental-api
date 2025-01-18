@@ -1,8 +1,6 @@
 package pl.myproject.car_rental_api.unit.repository;
 
-import org.junit.jupiter.api.DisplayName;
-import org.junit.jupiter.api.Order;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
@@ -18,6 +16,8 @@ import java.util.NoSuchElementException;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 
 @DataJpaTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
+@DisplayName("Car availability tests")
 public class CarAvailabilityRepositoryTest {
 
     @Autowired
@@ -55,6 +55,7 @@ public class CarAvailabilityRepositoryTest {
         }
     }
 
+
     @Test
     @Order(2)
     @DisplayName("Test 2: Check if car available in given date")
@@ -75,6 +76,8 @@ public class CarAvailabilityRepositoryTest {
         assertThat(carAvailability.getStatus()).isEqualTo("AVAILABLE");
         assertThat(carAvailability.getCar().getId()).isEqualTo(carId);
 
+
+
         System.out.println("------------------------");
         System.out.println("------------------------");
         System.out.println("------------------------");
@@ -94,30 +97,30 @@ public class CarAvailabilityRepositoryTest {
 
         long carId = 1;
         List<CarAvailability> carAvailabilities = carAvailabilityRepository.findAllByCarId(carId);
+        assertThat(carAvailabilities.size()).isEqualTo(1);
 
         // retrieving car availability with entityManger
         CarAvailability carAv = entityManager.find(CarAvailability.class, carAvailabilityId);
 
         // checking data correctness
+        assertThat(carAv).isNotNull();
         assertThat(carAv.getEndDate()).isEqualTo(newEndDate);
         assertThat(carAv.getStartDate()).isEqualTo(LocalDate.of(2025, 01, 01));
         assertThat(carAv.getStatus()).isEqualTo("AVAILABLE");
-//        assertThat(carAvailabilities.size()).isEqualTo(1);
 
         // printing out data
         System.out.println("------------------------------");
         System.out.println("------------------------------");
         System.out.println("------------------------------");
+
         System.out.println("Car status: " + carAv.getStatus() + " start date: " + carAv.getStartDate() +
                 " end date: " + carAv.getEndDate());
-
-        System.out.println(carAvailabilities);
     }
 
     @Test
     @Order(4)
     @DisplayName("Test 4: adding availability (reserved status)")
-    @Rollback(value = false)
+    @Rollback(false)
     public void savingAvailabilityForCar() {
 
         int carId = 1;
@@ -127,7 +130,7 @@ public class CarAvailabilityRepositoryTest {
         Car car = entityManager.find(Car.class, carId);
 
         // creating car availability object to be saved
-        CarAvailability carAvailability = CarAvailability.builder()
+        CarAvailability newCarAvailability = CarAvailability.builder()
                 .status("RESERVED")
                 .startDate(from)
                 .endDate(to)
@@ -135,19 +138,22 @@ public class CarAvailabilityRepositoryTest {
                 .build();
 
         // saving new car availability
-        CarAvailability newCarAvailability = carAvailabilityRepository.save(carAvailability);
+        carAvailabilityRepository.save(newCarAvailability);
 
         // getting all car availabilities for given car
         List<CarAvailability> carAvailabilities = carAvailabilityRepository.findAllByCarId(carId);
+        assertThat(carAvailabilities.size()).isEqualTo(2);
 
         // getting availability with reserved status if exists
-        CarAvailability carAvailability1 = carAvailabilities.stream()
+        CarAvailability carAvailability = carAvailabilities.stream()
                 .filter( carAv -> carAv.getStatus().equalsIgnoreCase("reserved"))
                 .findFirst()
                 .orElse(null);
 
         // checking if it exists (has been successfully saved)
-        assertThat(carAvailability1).isNotNull();
+        assertThat(carAvailability).isNotNull();
+        assertThat(carAvailability.getStartDate()).isEqualTo(from);
+        assertThat(carAvailability.getEndDate()).isEqualTo(to);
 
         System.out.println("----------------------------");
         System.out.println("----------------------------");
@@ -182,24 +188,27 @@ public class CarAvailabilityRepositoryTest {
                 .build();
 
         // saving new car availability
-        CarAvailability newCarAvailability = carAvailabilityRepository.save(carAvailability);
+        carAvailabilityRepository.save(carAvailability);
 
         // getting all car availabilities for given car
         List<CarAvailability> carAvailabilities = carAvailabilityRepository.findAllByCarId(carId);
+
+        assertThat(carAvailabilities.size()).isEqualTo(3);
 
         List<CarAvailability> availablePeriods = carAvailabilities.stream()
                         .filter( carAv -> carAv.getStatus().equalsIgnoreCase("available"))
                                 .toList();
 
         assertThat(availablePeriods.size()).isEqualTo(2);
-//        assertThat(carAvailabilities.size()).isEqualTo(3);
+
         System.out.println("----------------------------");
         System.out.println("----------------------------");
         System.out.println("----------------------------");
+
         // printing data
         int i = 1;
         for (CarAvailability carAv : carAvailabilities) {
-            System.out.println(i + ". Car Availability[from: " + carAv.getStartDate() + " to: " + carAv.getEndDate() +
+            System.out.println(i + ". Car Availability[ id: " + carAv.getId() + " from: " + carAv.getStartDate() + " to: " + carAv.getEndDate() +
                     " status: " + carAv.getStatus() + " car id: " + carAv.getCar().getId());
             i++;
         }
