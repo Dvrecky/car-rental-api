@@ -99,12 +99,12 @@ CREATE TABLE equipments (
 CREATE TABLE reservations (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     car_id INT NOT NULL,
-    reservation_booking_date DATETIME NOT NULL,
-    reservation_start_date DATETIME NOT NULL,
-    reservation_end_date DATETIME NOT NULL,
+    booking_date DATETIME NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
     total_price INT NOT NULL,
     payment_method VARCHAR(30) NOT NULL,
-    reservation_status VARCHAR(20) NOT NULL,
+    status VARCHAR(20) NOT NULL,
     remarks TEXT,
     
     CONSTRAINT FK_ReservationCar FOREIGN KEY (car_id) REFERENCES cars(id)
