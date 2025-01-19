@@ -42,8 +42,6 @@ public class CarServiceTest {
 
     private ModelMapper modelMapper;
 
-    private CarAvailabilityRepository carAvailabilityRepository;
-
     @BeforeEach
     public void setup() {
 
@@ -52,7 +50,7 @@ public class CarServiceTest {
                 .setFieldMatchingEnabled(true)
                 .setFieldAccessLevel(Configuration.AccessLevel.PRIVATE);
 
-        carService = new CarServiceImpl(carRepository, modelMapper, carAvailabilityRepository);
+        carService = new CarServiceImpl(carRepository, modelMapper);
     }
 
     @Test

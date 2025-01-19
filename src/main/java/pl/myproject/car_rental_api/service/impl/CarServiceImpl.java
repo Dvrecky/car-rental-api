@@ -4,9 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.dto.StatusDTO;
 import pl.myproject.car_rental_api.entity.Car;
-import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
 import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.service.CarService;
@@ -17,14 +15,12 @@ import java.util.List;
 public class CarServiceImpl implements CarService {
 
     private final CarRepository carRepository;
-    private final CarAvailabilityRepository carAvailabilityRepository;
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, ModelMapper modelMapper, CarAvailabilityRepository carAvailabilityRepository) {
+    public CarServiceImpl(CarRepository carRepository, ModelMapper modelMapper) {
         this.carRepository = carRepository;
         this.modelMapper = modelMapper;
-        this.carAvailabilityRepository = carAvailabilityRepository;
     }
 
     @Override
@@ -60,13 +56,5 @@ public class CarServiceImpl implements CarService {
         Car car = modelMapper.map(carDTO, Car.class);
         Car updatedCar = carRepository.save(car);
         return modelMapper.map(updatedCar, CarDTO.class);
-    }
-    
-    public List<StatusDTO> getCarAvailabilityList(long carId){
-        List<CarAvailability> carAvailabilities = carAvailabilityRepository.findAllByCarId(carId);
-        List<StatusDTO> carAvailabilityList = carAvailabilities.stream()
-                .map(carAv -> new StatusDTO(carAv.getStartDate(), carAv.getEndDate(), carAv.getStatus()))
-                .toList();
-        return carAvailabilityList;
     }
 }
