@@ -32,4 +32,11 @@ public class CarAvailability {
     @ManyToOne
     @JoinColumn(name = "car_id")
     private Car car;
+
+    public CarAvailability(String status, LocalDate startDate, LocalDate endDate, Car car) {
+        this.status = status;
+        this.startDate = startDate;
+        this.endDate = endDate;
+        this.car = car;
+    }
 }
