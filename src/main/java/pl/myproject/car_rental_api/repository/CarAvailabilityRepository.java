@@ -1,6 +1,7 @@
 package pl.myproject.car_rental_api.repository;
 
 import jakarta.transaction.Transactional;
+import org.springframework.cglib.core.Local;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -17,11 +18,26 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
 
     List<CarAvailability> findAllByCarId(long id);
 
-    @Query("SELECT c FROM CarAvailability c WHERE c.car.id = :id AND c.startDate < :startDate AND c.endDate > :endDate AND c.status='AVAILABLE'")
+    @Query("SELECT c FROM CarAvailability c WHERE c.car.id = :id AND c.startDate <= :startDate AND c.endDate >= :endDate AND c.status='AVAILABLE'")
     Optional<CarAvailability> isCarAvailable(@Param("id") long id, @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     @Transactional
     @Modifying
     @Query("UPDATE CarAvailability SET endDate = :newEndDate WHERE id = :id")
     void updateEndDate(@Param("newEndDate") LocalDate endDate, long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CarAvailability SET endDate = :newEndDate, status = 'RESERVED' WHERE id =:id")
+    void updateEndDateAndStatus(@Param("newEndDate")LocalDate endDate, long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CarAvailability SET startDate = :newStartDate, status = 'RESERVED' WHERE id=:id")
+    void updateStartDateAndStatus(@Param("newStartDate") LocalDate startDate, long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CarAvailability SET status = :newStatus WHERE id = :id")
+    void updateStatus(long id, @Param("newStatus") String status);
 }

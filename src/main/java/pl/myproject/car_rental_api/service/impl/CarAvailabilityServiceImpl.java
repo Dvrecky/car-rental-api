@@ -8,8 +8,10 @@ import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
 import pl.myproject.car_rental_api.service.CarAvailabilityService;
 
 import java.time.LocalDate;
+import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.stream.Collectors;
 
 @Service
 public class CarAvailabilityServiceImpl implements CarAvailabilityService {
@@ -25,7 +27,10 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
         List<StatusDTO> carAvailabilityList = carAvailabilities.stream()
                 .map(carAv -> new StatusDTO(carAv.getStartDate(), carAv.getEndDate(), carAv.getStatus()))
                 .toList();
-        return carAvailabilityList;
+
+        return carAvailabilityList.stream()
+                .sorted(Comparator.comparing(StatusDTO::getFrom))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -48,14 +53,33 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
     public void changeCarAvailability(CarAvailability carAvailability, Reservation reservation) {
 
         long availabilityId = carAvailability.getId();
-        LocalDate newEndDate = reservation.getStartDate().toLocalDate().minusDays(1);
-        carAvailabilityRepository.updateEndDate(newEndDate, availabilityId);
 
         LocalDate reservationStartDate = reservation.getStartDate().toLocalDate();
         LocalDate reservationEndDate = reservation.getEndDate().toLocalDate();
 
-        carAvailabilityRepository.save(new CarAvailability("RESERVED", reservationStartDate, reservationEndDate, reservation.getCar()));
+        if(reservationStartDate.isEqual(carAvailability.getStartDate()) && reservationEndDate.isEqual(carAvailability.getEndDate())) {
 
-        carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), reservation.getCar()));
+            carAvailabilityRepository.updateStatus(availabilityId, "RESERVED");
+
+        } else if(reservationStartDate.isEqual(carAvailability.getStartDate())) {
+
+            carAvailabilityRepository.updateEndDateAndStatus(reservationEndDate, availabilityId);
+
+            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), reservation.getCar()));
+
+        } else if (reservationEndDate.isEqual(carAvailability.getEndDate())) {
+
+            carAvailabilityRepository.updateStartDateAndStatus(reservationStartDate, availabilityId);
+
+            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), reservationStartDate.minusDays(1), reservation.getCar()));
+
+        } else {
+            LocalDate newEndDate = reservationStartDate.minusDays(1);
+            carAvailabilityRepository.updateEndDate(newEndDate, availabilityId);
+
+            carAvailabilityRepository.save(new CarAvailability("RESERVED", reservationStartDate, reservationEndDate, reservation.getCar()));
+
+            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), reservation.getCar()));
+        }
     }
 }
