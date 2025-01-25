@@ -1,7 +1,9 @@
 package pl.myproject.car_rental_api.service.impl;
 
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import pl.myproject.car_rental_api.dto.StatusDTO;
+import pl.myproject.car_rental_api.dto.UpdateReservationDateDTO;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.entity.Reservation;
 import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
@@ -11,6 +13,7 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -80,6 +83,32 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
             carAvailabilityRepository.save(new CarAvailability("RESERVED", reservationStartDate, reservationEndDate, reservation.getCar()));
 
             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), reservation.getCar()));
+        }
+    }
+
+    @Override
+    public void isCarAvailableForNewPeriod(Reservation reservation, UpdateReservationDateDTO reservationDateDTO) {
+
+        long carId = reservation.getCar().getId();
+
+        // current period
+        LocalDate startDate = reservation.getStartDate().toLocalDate();
+        LocalDate endDate = reservation.getEndDate().toLocalDate();
+
+        // new period
+        LocalDate newStartDate = reservationDateDTO.getNewStartDate().toLocalDate();
+        LocalDate newEndDate = reservationDateDTO.getNewEndDate().toLocalDate();
+
+        if(startDate.isEqual(reservationDateDTO.getNewStartDate().toLocalDate()) && endDate.isBefore(newEndDate)) {
+            CarAvailability carAvailabilities = carAvailabilityRepository.checkIfNewDateIsAvailable(carId, newStartDate, newEndDate)
+                    .orElseThrow(() -> new NoSuchElementException("New reservation period is not available"));
+
+            CarAvailability carAvailability = carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
+                    .orElseThrow(() -> new NoSuchElementException("Car availability not found"));
+
+            carAvailabilityRepository.updateEndDate(newEndDate, carAvailability.getId());
+
+            carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilities.getId());
         }
     }
 }
