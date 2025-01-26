@@ -2,10 +2,11 @@ package pl.myproject.car_rental_api.service.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.myproject.car_rental_api.dto.CarDTO;
 import pl.myproject.car_rental_api.entity.Car;
-import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
+
 import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.service.CarService;
 
@@ -18,7 +19,7 @@ public class CarServiceImpl implements CarService {
     private final ModelMapper modelMapper;
 
     @Autowired
-    public CarServiceImpl(CarRepository carRepository, ModelMapper modelMapper) {
+    public CarServiceImpl(CarRepository carRepository, @Qualifier("defaultModelMapper") ModelMapper modelMapper) {
         this.carRepository = carRepository;
         this.modelMapper = modelMapper;
     }
@@ -40,9 +41,13 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDTO getCarByIdWithDetails(int id) {
+    public CarDTO getCarDTOByIdWithDetails(int id) {
         Car car = carRepository.findByIdWithDetails(id).get();
         return modelMapper.map(car, CarDTO.class);
+    }
+
+    public Car getCarByIdWithDetails(int id) {
+        return carRepository.findByIdWithDetails(id).get();
     }
 
     @Override

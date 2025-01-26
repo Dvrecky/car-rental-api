@@ -1,9 +1,9 @@
 package pl.myproject.car_rental_api.service.impl;
 
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 import pl.myproject.car_rental_api.dto.StatusDTO;
 import pl.myproject.car_rental_api.dto.UpdateReservationDateDTO;
+import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.entity.Reservation;
 import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
@@ -13,7 +13,6 @@ import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -37,12 +36,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
     }
 
     @Override
-    public CarAvailability isCarAvailable(Reservation reservation) {
-
-        LocalDate startDate = reservation.getStartDate().toLocalDate();
-        LocalDate endDate = reservation.getEndDate().toLocalDate();
-
-        int carId = reservation.getCar().getId();
+    public CarAvailability isCarAvailable(LocalDate startDate, LocalDate endDate, int carId) {
 
         CarAvailability carAvailability = carAvailabilityRepository
                 .isCarAvailable(carId, startDate, endDate)
@@ -53,12 +47,9 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
     }
 
     @Override
-    public void changeCarAvailability(CarAvailability carAvailability, Reservation reservation) {
+    public void changeCarAvailability(CarAvailability carAvailability, LocalDate reservationStartDate, LocalDate reservationEndDate, Car car) {
 
         long availabilityId = carAvailability.getId();
-
-        LocalDate reservationStartDate = reservation.getStartDate().toLocalDate();
-        LocalDate reservationEndDate = reservation.getEndDate().toLocalDate();
 
         if(reservationStartDate.isEqual(carAvailability.getStartDate()) && reservationEndDate.isEqual(carAvailability.getEndDate())) {
 
@@ -68,21 +59,21 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
             carAvailabilityRepository.updateEndDateAndStatus(reservationEndDate, availabilityId);
 
-            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), reservation.getCar()));
+            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), car));
 
         } else if (reservationEndDate.isEqual(carAvailability.getEndDate())) {
 
             carAvailabilityRepository.updateStartDateAndStatus(reservationStartDate, availabilityId);
 
-            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), reservationStartDate.minusDays(1), reservation.getCar()));
+            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), reservationStartDate.minusDays(1), car));
 
         } else {
             LocalDate newEndDate = reservationStartDate.minusDays(1);
             carAvailabilityRepository.updateEndDate(newEndDate, availabilityId);
 
-            carAvailabilityRepository.save(new CarAvailability("RESERVED", reservationStartDate, reservationEndDate, reservation.getCar()));
+            carAvailabilityRepository.save(new CarAvailability("RESERVED", reservationStartDate, reservationEndDate, car));
 
-            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), reservation.getCar()));
+            carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), car));
         }
     }
 

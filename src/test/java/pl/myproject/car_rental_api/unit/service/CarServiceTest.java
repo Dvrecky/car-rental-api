@@ -250,7 +250,7 @@ public class CarServiceTest {
         given(carRepository.findByIdWithDetails(i)).willReturn(Optional.of(car));
 
         // calling service method
-        CarDTO result = carService.getCarByIdWithDetails(i);
+        CarDTO result = carService.getCarDTOByIdWithDetails(i);
 
         // checking data correctness
         assertThat(result).isNotNull();

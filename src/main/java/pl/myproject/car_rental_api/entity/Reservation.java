@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @Getter
 @Setter
-@ToString(exclude = "car")
+@ToString
 @Entity
 @Table(name = "reservations")
 public class Reservation {
@@ -41,7 +41,7 @@ public class Reservation {
     @Column(name = "remarks")
     private String remarks;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "car_id")
     private Car car;
 }

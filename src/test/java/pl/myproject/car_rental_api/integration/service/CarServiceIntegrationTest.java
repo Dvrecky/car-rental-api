@@ -104,7 +104,7 @@ public class CarServiceIntegrationTest {
 
         // calling service method
         int id = 4;
-        CarDTO carDTO = carService.getCarByIdWithDetails(id);
+        CarDTO carDTO = carService.getCarDTOByIdWithDetails(id);
 
         // checking data correctness
         assertThat(carDTO).isNotNull();

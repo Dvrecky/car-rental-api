@@ -1,6 +1,7 @@
 package pl.myproject.car_rental_api.service;
 
 import pl.myproject.car_rental_api.dto.CarDTO;
+import pl.myproject.car_rental_api.entity.Car;
 
 import java.util.List;
 
@@ -10,7 +11,9 @@ public interface CarService {
 
     CarDTO saveCar(CarDTO carDTO);
 
-    CarDTO getCarByIdWithDetails(int id);
+    CarDTO getCarDTOByIdWithDetails(int id);
+
+    Car getCarByIdWithDetails(int id);
 
     void deleteCarById(int id);
 

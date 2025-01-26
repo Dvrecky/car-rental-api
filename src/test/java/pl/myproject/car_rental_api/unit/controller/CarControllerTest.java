@@ -235,7 +235,7 @@ public class CarControllerTest {
                 .build();
 
         // mocking carService.getCarByIdWithDetails() behaviour to return carDTO
-        given(carService.getCarByIdWithDetails(i)).willReturn(carDTO);
+        given(carService.getCarDTOByIdWithDetails(i)).willReturn(carDTO);
 
         // sending GET request to "/api/cars/{id}"
         ResultActions response = mockMvc.perform(get("/api/cars/{id}", i));

@@ -3,9 +3,9 @@ package pl.myproject.car_rental_api.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.myproject.car_rental_api.dto.AddReservationDTO;
 import pl.myproject.car_rental_api.dto.ReservationDTO;
 import pl.myproject.car_rental_api.dto.UpdateReservationDateDTO;
-import pl.myproject.car_rental_api.entity.Reservation;
 import pl.myproject.car_rental_api.service.ReservationService;
 
 @RestController
@@ -19,8 +19,12 @@ public class ReservationController {
     }
 
     @PostMapping
-    public ResponseEntity<Reservation> addReservation(@RequestBody Reservation reservation) {
-        Reservation savedReservation = reservationService.addReservation(reservation);
+    public ResponseEntity<ReservationDTO> addReservation(@RequestBody AddReservationDTO addReservationDTO) {
+
+        addReservationDTO.setId(0);
+
+        ReservationDTO savedReservation = reservationService.addReservation(addReservationDTO);
+
         return ResponseEntity.status(HttpStatus.CREATED).body(savedReservation);
     }
 
