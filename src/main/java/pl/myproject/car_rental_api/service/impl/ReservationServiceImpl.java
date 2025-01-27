@@ -80,8 +80,7 @@ public class ReservationServiceImpl implements ReservationService {
         CarAvailability carAvailability = carAvailabilityService.isCarAvailableForNewPeriod(carId, startDate, endDate, reservationDateDTO);
 
         // changing car availability
-        CarAvailability currentCarAvailability = carAvailabilityService.getCarAvailability(carId, startDate, endDate);
-        carAvailabilityService.changeCarAvailabilityForNewPeriod(carAvailability, currentCarAvailability, startDate, endDate, reservationDateDTO);
+        carAvailabilityService.changeCarAvailabilityForNewPeriod(carId, carAvailability, startDate, endDate, reservationDateDTO);
 
         reservation.setStartDate(reservationDateDTO.getNewStartDate());
         reservation.setEndDate(reservationDateDTO.getNewEndDate());
