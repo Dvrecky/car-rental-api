@@ -25,4 +25,9 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
     @EntityGraph(attributePaths = {"car", "car.model", "car.model.engine", "car.model.gearbox"})
     @Query("SELECT r FROM Reservation r WHERE r.id = :id")
     Optional<Reservation> findReservationWithCarDetailsById(long id);
+
+    // query for fetching reservation with car
+    @EntityGraph(attributePaths = "car")
+    @Query("SELECT r FROM Reservation r WHERE r.id = :id")
+    Optional<Reservation> findReservationWithCarById(long id);
 }

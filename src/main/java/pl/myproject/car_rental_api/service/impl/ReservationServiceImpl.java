@@ -1,5 +1,6 @@
 package pl.myproject.car_rental_api.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -9,7 +10,6 @@ import pl.myproject.car_rental_api.dto.UpdateReservationDateDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.entity.Reservation;
-import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.repository.ReservationRepository;
 import pl.myproject.car_rental_api.service.CarAvailabilityService;
 import pl.myproject.car_rental_api.service.CarService;
@@ -64,22 +64,31 @@ public class ReservationServiceImpl implements ReservationService {
         return toReservationDTOModelMapper.map(newReservation, ReservationDTO.class);
     }
 
+    @Transactional
     @Override
     public ReservationDTO updateReservationPeriod(UpdateReservationDateDTO reservationDateDTO, long reservationId) {
 
-        Reservation reservation = reservationRepository.findById(reservationId)
-                .orElseThrow( () -> new NoSuchElementException("Reservation with id : " + reservationId + " not found"));
+        // getting reservation with car
+        Reservation reservation = reservationRepository.findReservationWithCarDetailsById(reservationId)
+                        .orElseThrow( () -> new NoSuchElementException("Reservation with id: " + reservationId + " not found"));
 
-        carAvailabilityService.isCarAvailableForNewPeriod(reservation, reservationDateDTO);
+        // checking if car is available for new period
+        long carId = reservation.getCar().getId();
+        LocalDate startDate = reservation.getStartDate().toLocalDate();
+        LocalDate endDate = reservation.getEndDate().toLocalDate();
 
-        LocalDateTime newStartDate = reservationDateDTO.getNewStartDate();
-        LocalDateTime newEndDate = reservationDateDTO.getNewEndDate();
+        CarAvailability carAvailability = carAvailabilityService.isCarAvailableForNewPeriod(carId, startDate, endDate, reservationDateDTO);
 
-        reservationRepository.updateReservationPeriod(reservationId, newStartDate, newEndDate);
+        // changing car availability
+        CarAvailability currentCarAvailability = carAvailabilityService.getCarAvailability(carId, startDate, endDate);
+        carAvailabilityService.changeCarAvailabilityForNewPeriod(carAvailability, currentCarAvailability, startDate, endDate, reservationDateDTO);
 
-        Reservation updatedReservation = reservationRepository.findById(reservationId)
-                .orElseThrow( () -> new NoSuchElementException("Reservation with id : " + reservationId + " not found"));
+        reservation.setStartDate(reservationDateDTO.getNewStartDate());
+        reservation.setEndDate(reservationDateDTO.getNewEndDate());
 
-        return defaultModelMapper.map(updatedReservation, ReservationDTO.class);
+        // updating reservation with new period in db
+        reservationRepository.updateReservationPeriod(reservationId, reservationDateDTO.getNewStartDate(), reservationDateDTO.getNewEndDate());
+
+        return toReservationDTOModelMapper.map(reservation, ReservationDTO.class);
     }
 }

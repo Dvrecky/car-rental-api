@@ -29,10 +29,10 @@ public class ReservationController {
     }
 
     @PatchMapping("/{id}/period")
-    public ResponseEntity<ReservationDTO> changeReservationPeriod(@RequestBody UpdateReservationDateDTO updateReservationDateDTO, @PathVariable long id) {
+    public ResponseEntity<ReservationDTO> changeReservationPeriod(@RequestBody UpdateReservationDateDTO updateReservationDateDTO, @PathVariable("id") long reservationId) {
 
-        ReservationDTO reservationDTO = reservationService.updateReservationPeriod(updateReservationDateDTO, id);
-
+        // handover new reservation period and reservation id
+        ReservationDTO reservationDTO = reservationService.updateReservationPeriod(updateReservationDateDTO, reservationId);
         return ResponseEntity.ok(reservationDTO);
     }
 }
