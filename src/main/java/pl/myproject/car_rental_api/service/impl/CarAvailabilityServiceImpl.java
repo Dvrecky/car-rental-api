@@ -91,14 +91,26 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
         LocalDate newEndDate = reservationDateDTO.getNewEndDate().toLocalDate();
 
         // checking if car is available for various cases
-        if(startDate.isEqual(reservationDateDTO.getNewStartDate().toLocalDate()) && endDate.isBefore(newEndDate)) {
+
+        // if new reservation period scope is within current period
+        if ((startDate.isEqual(newStartDate) || startDate.isBefore(newStartDate)) &&
+                (endDate.isEqual(newEndDate) || endDate.isAfter(newEndDate))) {
+
+            if(startDate.isEqual(newStartDate)) {   // if new reservation start date is the same
+                return carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
+                    .orElseThrow(() -> new NoSuchElementException("New reservation period is not available"));
+
+            } else if(endDate.isEqual(newEndDate)){ // if new reservation end date is the same
+                return carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
+                        .orElseThrow(() -> new NoSuchElementException("New reservation period is not available"));
+            } else {    // if new reservation period is between the current one
+                return carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
+                        .orElseThrow(() -> new NoSuchElementException("New reservation period is not available"));
+            }
+        } else if(startDate.isEqual(newStartDate) && endDate.isBefore(newEndDate)) {
 
             // checking if car is available
             return carAvailabilityRepository.checkIfNewDateIsAvailable(carId, newStartDate, newEndDate)
-                    .orElseThrow(() -> new NoSuchElementException("New reservation period is not available"));
-
-        } else if (startDate.isEqual(reservationDateDTO.getNewStartDate().toLocalDate()) && endDate.isAfter(newEndDate)) {
-            return carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
                     .orElseThrow(() -> new NoSuchElementException("New reservation period is not available"));
         }
 
@@ -106,36 +118,81 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
     }
 
     @Override
-    public void changeCarAvailabilityForNewPeriod(long carId, CarAvailability carAvailability, LocalDate startDate, LocalDate endDate, UpdateReservationDateDTO reservationDateDTO) {
+    public void changeCarAvailabilityForNewPeriod(long carId, CarAvailability carAvailability, LocalDate startDate /*05*/, LocalDate endDate/*09*/, UpdateReservationDateDTO reservationDateDTO) {
 
         // new period
         LocalDate newStartDate = reservationDateDTO.getNewStartDate().toLocalDate();
         LocalDate newEndDate = reservationDateDTO.getNewEndDate().toLocalDate();
 
         // updating car availability according to given case
-        if(startDate.isEqual(reservationDateDTO.getNewStartDate().toLocalDate()) && endDate.isBefore(newEndDate)) {
+        if ((startDate.isEqual(newStartDate) || startDate.isBefore(newStartDate)) &&
+                (endDate.isEqual(newEndDate) || endDate.isAfter(newEndDate))) {
 
+            if(startDate.isEqual(newStartDate)) {   // if new reservation start date is the same
+                // if new reservation period is between old reservation period
+
+                // updating end date for car availability
+                carAvailabilityRepository.updateEndDate(newEndDate, carAvailability.getId());
+
+                Optional<CarAvailability> carAvailability1 = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1), "AVAILABLE");
+
+                if(carAvailability1.isPresent()) {
+
+                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability1.get().getId());
+
+                } else {
+
+                    carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), endDate, carAvailability.getCar()));
+                }
+
+            } else if(endDate.isEqual(newEndDate)){ // if new reservation end date is the same
+
+                // updating start date for car availability
+                carAvailabilityRepository.updateStartDate(newStartDate, carAvailability.getId());
+
+                Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
+
+                if(carAvailabilityOptional.isPresent()) {
+                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityOptional.get().getId());
+                } else {
+                    carAvailabilityRepository.save(new CarAvailability("AVAILABLE", startDate, newStartDate.minusDays(1), carAvailability.getCar()));
+                }
+
+            } else {    // if new reservation period is between the current one
+
+                // changing period for existing car availability (cutting reservation period)
+                carAvailabilityRepository.changePeriod(carAvailability.getId(), newStartDate, newEndDate);
+
+                Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
+
+                if(carAvailabilityOptional.isPresent()) {
+                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityOptional.get().getId());
+                } else {
+                    carAvailabilityRepository.save(new CarAvailability("AVAILABLE", startDate, newStartDate.minusDays(1), carAvailability.getCar()));
+                }
+
+                Optional<CarAvailability> carAvailabilityOptional1 = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1) , "AVAILABLE");
+
+                if(carAvailabilityOptional1.isPresent()) {
+                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilityOptional1.get().getId());
+                } else {
+                    carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), endDate, carAvailability.getCar()));
+                }
+
+            }
+
+        } else if(startDate.isEqual(newStartDate) && endDate.isBefore(newEndDate)) {
+
+            // checking if car is available
             CarAvailability currentCarAvailability = carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
                             .orElseThrow( () -> new NoSuchElementException("Car availability not found"));
 
             carAvailabilityRepository.updateEndDate(newEndDate, currentCarAvailability.getId());
 
-            carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability.getId());
-
-        } else if (startDate.isEqual(reservationDateDTO.getNewStartDate().toLocalDate()) && endDate.isAfter(newEndDate)) {
-            // if new reservation period is between old reservation period
-
-            // updating end date for availability
-            carAvailabilityRepository.updateEndDate(newEndDate, carAvailability.getId());
-
-            Optional<CarAvailability> carAvailability1 = carAvailabilityRepository.checkStatus(carId, endDate.plusDays(1), "AVAILABLE");
-
-            if(carAvailability1.isPresent()) {
-
-                carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability1.get().getId());
-
+            if(carAvailability.getStartDate().isEqual(carAvailability.getEndDate())) {
+                carAvailabilityRepository.deleteById(carAvailability.getId());
             } else {
-                carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), endDate, carAvailability.getCar()));
+                carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability.getId());
             }
         }
     }
