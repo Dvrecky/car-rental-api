@@ -46,6 +46,12 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
             "(:newEndDate between c.startDate AND c.endDate))")
     Optional<CarAvailability> checkIfNewDateIsAvailable(long carId, @Param("newStartDate") LocalDate startDate, @Param("newEndDate") LocalDate endDate);
 
+    // query for checking if new reservation date is available
+    @Query("SELECT c FROM CarAvailability c WHERE c.car.Id = :carId AND c.status = 'AVAILABLE' AND " +
+            "((:newStartDate between c.startDate AND c.endDate ) OR " +
+            "(:newEndDate between c.startDate AND c.endDate))")
+    Optional<List<CarAvailability>> chechIfNewDateIsAvailable(long carId, @Param("newStartDate") LocalDate startDate, @Param("newEndDate") LocalDate endDate);
+
     // query for getting a car availability for given car and period
     @Query("SELECT c FROM CarAvailability c WHERE c.car.Id = :carId AND c.startDate = :startDate AND c.endDate = :endDate")
     Optional<CarAvailability> getCarAvailability(@Param("carId") long carId , @Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
