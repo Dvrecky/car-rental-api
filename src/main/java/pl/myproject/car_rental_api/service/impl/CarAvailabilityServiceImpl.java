@@ -204,7 +204,43 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
             CarAvailability currentCarAvailability = carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
                     .orElseThrow( () -> new NoSuchElementException("Car availability not found"));
 
-            if(startDate.isEqual(newStartDate)){
+            if(newStartDate.isEqual(endDate)){
+
+                carAvailabilityRepository.changePeriod(currentCarAvailability.getId(), newStartDate, newEndDate);
+
+                Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
+
+                if(carAvailabilityOptional.isPresent()) {
+                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityOptional.get().getId());
+                } else {
+                    carAvailabilityRepository.save(new CarAvailability("AVAILABLE", startDate, newStartDate.minusDays(1), carAvailability.getCar()));
+                }
+
+                if(carAvailability.getEndDate().isEqual(newEndDate)){
+                    carAvailabilityRepository.deleteById(carAvailability.getId());
+                } else {
+                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability.getId());
+                }
+
+            } else if (newEndDate.isEqual(startDate)) {
+
+                carAvailabilityRepository.changePeriod(currentCarAvailability.getId(), newStartDate, newEndDate);
+
+                Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1), "AVAILABLE");
+
+                if(carAvailabilityOptional.isPresent()) {
+                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilityOptional.get().getId());
+                } else {
+                    carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), endDate, carAvailability.getCar()));
+                }
+
+                if(carAvailability.getStartDate().isEqual(newStartDate)) {
+                    carAvailabilityRepository.deleteById(carAvailability.getId());
+                } else {
+                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailability.getId());
+                }
+            }
+            else if(startDate.isEqual(newStartDate)){
 
                 carAvailabilityRepository.updateEndDate(newEndDate, currentCarAvailability.getId());
 
