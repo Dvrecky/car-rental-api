@@ -27,13 +27,13 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
 
     @Transactional
     @Modifying
-    @Query("UPDATE CarAvailability SET endDate = :newEndDate, status = 'RESERVED' WHERE id =:id")
-    void updateEndDateAndStatus(@Param("newEndDate")LocalDate endDate, long id);
+    @Query("UPDATE CarAvailability SET endDate = :newEndDate, status = :newStatus WHERE id =:id")
+    void updateEndDateAndStatus(@Param("newEndDate")LocalDate endDate, long id, @Param("newStatus") String status);
 
     @Transactional
     @Modifying
-    @Query("UPDATE CarAvailability SET startDate = :newStartDate, status = 'RESERVED' WHERE id=:id")
-    void updateStartDateAndStatus(@Param("newStartDate") LocalDate startDate, long id);
+    @Query("UPDATE CarAvailability SET startDate = :newStartDate, status = :status WHERE id=:id")
+    void updateStartDateAndStatus(@Param("newStartDate") LocalDate startDate, long id, String status);
 
     @Transactional
     @Modifying
@@ -50,7 +50,7 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
     @Query("SELECT c FROM CarAvailability c WHERE c.car.Id = :carId AND c.status = 'AVAILABLE' AND " +
             "((:newStartDate between c.startDate AND c.endDate ) OR " +
             "(:newEndDate between c.startDate AND c.endDate))")
-    Optional<List<CarAvailability>> chechIfNewDateIsAvailable(long carId, @Param("newStartDate") LocalDate startDate, @Param("newEndDate") LocalDate endDate);
+    Optional<List<CarAvailability>> checkIfNewPeriodIsAvailable(long carId, @Param("newStartDate") LocalDate startDate, @Param("newEndDate") LocalDate endDate);
 
     // query for getting a car availability for given car and period
     @Query("SELECT c FROM CarAvailability c WHERE c.car.Id = :carId AND c.startDate = :startDate AND c.endDate = :endDate")
@@ -71,4 +71,9 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
     @Modifying
     @Query("UPDATE CarAvailability SET startDate = :startDate, endDate = :endDate WHERE id = :id")
     void changePeriod(long id, LocalDate startDate, LocalDate endDate);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE CarAvailability SET startDate = :startDate, endDate = :endDate, status = :status WHERE id = :id")
+    void changePeriodAndStatus(long id, LocalDate startDate, LocalDate endDate, String status);
 }
