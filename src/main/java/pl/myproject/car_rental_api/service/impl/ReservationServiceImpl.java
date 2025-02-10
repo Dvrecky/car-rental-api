@@ -16,8 +16,8 @@ import pl.myproject.car_rental_api.service.CarService;
 import pl.myproject.car_rental_api.service.ReservationService;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
 public class ReservationServiceImpl implements ReservationService {
@@ -89,5 +89,23 @@ public class ReservationServiceImpl implements ReservationService {
         reservationRepository.updateReservationPeriod(reservationId, reservationDateDTO.getNewStartDate(), reservationDateDTO.getNewEndDate());
 
         return toReservationDTOModelMapper.map(reservation, ReservationDTO.class);
+    }
+
+    @Override
+    public ReservationDTO cancelReservation(long reservationId) {
+
+        Optional<Reservation> optionalReservation = reservationRepository.findReservationWithCarDetailsById(reservationId);
+
+        if(optionalReservation.isEmpty()) {
+            throw new NoSuchElementException("Reservation with ID: " + reservationId + " not found");
+        }
+
+        Reservation reservationToCancel = optionalReservation.get();
+        reservationToCancel.setStatus("CANCELED");
+        reservationRepository.changeStatus(reservationId, "CANCELED");
+
+        carAvailabilityService.makeCarAvailable(reservationToCancel.getCar().getId(), reservationToCancel.getStartDate().toLocalDate(), reservationToCancel.getEndDate().toLocalDate());
+
+        return toReservationDTOModelMapper.map(reservationToCancel, ReservationDTO.class);
     }
 }

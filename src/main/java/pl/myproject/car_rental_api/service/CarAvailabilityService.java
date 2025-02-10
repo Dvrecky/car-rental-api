@@ -21,4 +21,6 @@ public interface CarAvailabilityService {
     CarAvailability isCarAvailableForNewPeriod(long carId, LocalDate startDate, LocalDate endDate, UpdateReservationDateDTO reservationDateDTO);
 
     void changeCarAvailabilityForNewPeriod(long carId, CarAvailability carAvailability, LocalDate startDate, LocalDate endDate, UpdateReservationDateDTO reservationDateDTO);
+
+    void makeCarAvailable(int carId, LocalDate startDate, LocalDate endDate);
 }

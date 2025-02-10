@@ -546,4 +546,37 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
             }
         }
     }
+
+    @Override
+    public void makeCarAvailable(int carId, LocalDate startDate, LocalDate endDate) {
+
+        CarAvailability carAvCurrent = carAvailabilityRepository.getCarAvailability(carId, startDate, endDate)
+                .orElseThrow( () -> new NoSuchElementException("Car availability with car id: " + carId + " start date: " + startDate +
+                         " end date: " + endDate + " not found"));
+
+        Optional<CarAvailability> optionalAfterCarAv = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1), "AVAILABLE");
+        Optional<CarAvailability> optionalBeforeCarAv = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
+
+        if(optionalAfterCarAv.isPresent() && optionalBeforeCarAv.isPresent()) {
+
+            CarAvailability carAvBefore = optionalBeforeCarAv.get();
+            CarAvailability carAvAfter = optionalAfterCarAv.get();
+
+            carAvailabilityRepository.updateStartDate(carAvBefore.getStartDate(), carAvAfter.getId());
+            carAvailabilityRepository.deleteById(carAvCurrent.getId());
+            carAvailabilityRepository.deleteById(carAvBefore.getId());
+        } else if (optionalAfterCarAv.isPresent()) {
+            CarAvailability carAvAfter = optionalAfterCarAv.get();
+
+            carAvailabilityRepository.updateStartDate(carAvCurrent.getStartDate(), carAvAfter.getId());
+            carAvailabilityRepository.deleteById(carAvCurrent.getId());
+        } else if (optionalBeforeCarAv.isPresent()) {
+            CarAvailability carAvBefore = optionalBeforeCarAv.get();
+
+            carAvailabilityRepository.updateStartDateAndStatus(carAvBefore.getStartDate(), carAvCurrent.getId(), "AVAILABLE");
+            carAvailabilityRepository.deleteById(carAvBefore.getId());
+        } else {
+            carAvailabilityRepository.updateStatus(carAvCurrent.getId(), "AVAILABLE");
+        }
+    }
 }

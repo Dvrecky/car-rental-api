@@ -9,4 +9,6 @@ public interface ReservationService {
     ReservationDTO addReservation(AddReservationDTO addReservationDTO);
 
     ReservationDTO updateReservationPeriod(UpdateReservationDateDTO reservationDateDTO, long reservationId);
+
+    ReservationDTO cancelReservation(long reservationId);
 }

@@ -35,4 +35,12 @@ public class ReservationController {
         ReservationDTO reservationDTO = reservationService.updateReservationPeriod(updateReservationDateDTO, reservationId);
         return ResponseEntity.ok(reservationDTO);
     }
+
+    @PatchMapping("/{id}/cancel")
+    public ResponseEntity<ReservationDTO> cancelReservation(@PathVariable("id") long reservationId) {
+
+        ReservationDTO canceledReservationDTO = reservationService.cancelReservation(reservationId);
+
+        return ResponseEntity.ok(canceledReservationDTO);
+    }
 }

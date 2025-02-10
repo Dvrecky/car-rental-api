@@ -30,4 +30,9 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
     @EntityGraph(attributePaths = "car")
     @Query("SELECT r FROM Reservation r WHERE r.id = :id")
     Optional<Reservation> findReservationWithCarById(long id);
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Reservation SET status = :status WHERE id = :id")
+    void changeStatus(@Param("id") long reservationId, @Param("status") String newStatus);
 }

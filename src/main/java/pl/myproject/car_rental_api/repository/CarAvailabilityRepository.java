@@ -76,4 +76,6 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
     @Modifying
     @Query("UPDATE CarAvailability SET startDate = :startDate, endDate = :endDate, status = :status WHERE id = :id")
     void changePeriodAndStatus(long id, LocalDate startDate, LocalDate endDate, String status);
+
+
 }
