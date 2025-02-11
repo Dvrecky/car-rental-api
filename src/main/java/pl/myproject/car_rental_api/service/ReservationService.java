@@ -11,4 +11,6 @@ public interface ReservationService {
     ReservationDTO updateReservationPeriod(UpdateReservationDateDTO reservationDateDTO, long reservationId);
 
     ReservationDTO cancelReservation(long reservationId);
+
+    void isReservationConfirmed(long reservationId);
 }

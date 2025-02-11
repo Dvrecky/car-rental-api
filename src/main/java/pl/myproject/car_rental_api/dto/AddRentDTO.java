@@ -11,7 +11,8 @@ import java.time.LocalDateTime;
 @Setter
 @ToString
 public class AddRentDTO {
-    
+
+    private long id;
     private long reservationId;
     private LocalDateTime startDate;
     private LocalDateTime updateDate;

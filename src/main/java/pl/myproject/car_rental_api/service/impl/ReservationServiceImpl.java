@@ -108,4 +108,15 @@ public class ReservationServiceImpl implements ReservationService {
 
         return toReservationDTOModelMapper.map(reservationToCancel, ReservationDTO.class);
     }
+
+    @Override
+    public void isReservationConfirmed(long reservationId) {
+
+        Reservation reservation = reservationRepository.findById(reservationId)
+                .orElseThrow( () -> new NoSuchElementException("Reservation not found for ID: " + reservationId));
+
+        if(!reservation.getStatus().equalsIgnoreCase("CONFIRMED")) {
+            throw new NoSuchElementException("Reservation has a " + reservation.getStatus() + " status");
+        }
+    }
 }
