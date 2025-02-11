@@ -1,13 +1,18 @@
 package pl.myproject.car_rental_api.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import pl.myproject.car_rental_api.dto.AddRentDTO;
+import pl.myproject.car_rental_api.dto.RentDTO;
+import pl.myproject.car_rental_api.dto.UpdateRentDTO;
 import pl.myproject.car_rental_api.entity.Rent;
 import pl.myproject.car_rental_api.repository.RentRepository;
 import pl.myproject.car_rental_api.service.RentService;
 import pl.myproject.car_rental_api.service.ReservationService;
+
+import java.util.NoSuchElementException;
 
 @Service
 public class RentServiceImpl implements RentService {
@@ -32,5 +37,20 @@ public class RentServiceImpl implements RentService {
         Rent rent = rentRepository.save(modelMapper.map(addRentDTO, Rent.class));
 
         return modelMapper.map(rent, AddRentDTO.class);
+    }
+
+    @Transactional
+    @Override
+    public RentDTO updateRent(UpdateRentDTO updateRentDTO) {
+
+        long rentId = updateRentDTO.getId();
+        Rent rent = rentRepository.findById(rentId)
+                .orElseThrow( () -> new NoSuchElementException("Rent for ID: " + rentId + " not found"));
+
+        rent.setEndDate(updateRentDTO.getEndDate());
+        rent.setUpdateDate(updateRentDTO.getUpdateDate());
+        rent.setStatus(updateRentDTO.getStatus());
+
+        return modelMapper.map(rent, RentDTO.class);
     }
 }

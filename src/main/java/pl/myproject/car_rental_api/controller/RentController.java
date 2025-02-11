@@ -2,11 +2,10 @@ package pl.myproject.car_rental_api.controller;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import pl.myproject.car_rental_api.dto.AddRentDTO;
+import pl.myproject.car_rental_api.dto.RentDTO;
+import pl.myproject.car_rental_api.dto.UpdateRentDTO;
 import pl.myproject.car_rental_api.service.RentService;
 
 @RestController
@@ -25,5 +24,14 @@ public class RentController {
         AddRentDTO newRentDTO = rentService.addRent(addRentDTO);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(newRentDTO);
+    }
+
+    @PatchMapping("/{id}")
+    public ResponseEntity<RentDTO> updateRent(@PathVariable long id, @RequestBody UpdateRentDTO updateRentDTO) {
+
+        updateRentDTO.setId(id);
+        RentDTO updatedRentDTO = rentService.updateRent(updateRentDTO);
+
+        return ResponseEntity.ok(updatedRentDTO);
     }
 }
