@@ -114,7 +114,7 @@ CREATE TABLE rents (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     reservation_id BIGINT NOT NULL,
     rental_start_date DATETIME NOT NULL,
-    rental_end_date DATETIME NOT NULL,
+    rental_end_date DATETIME,
     damage_report TEXT,
     penalty_fee INT,
     update_date DATETIME NOT NULL,
