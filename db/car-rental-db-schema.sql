@@ -10,7 +10,7 @@ COLLATE utf8mb4_unicode_ci;
 USE carRentalDb;
 
 CREATE TABLE engines(
-	id INT PRIMARY KEY AUTO_INCREMENT, -- primary key obejmuje unique oraz not null
+	id INT PRIMARY KEY AUTO_INCREMENT,
     capacity DECIMAL(3, 1) NOT NULL,
     horsepower SMALLINT NOT NULL,
     torque SMALLINT NOT NULL,
@@ -74,7 +74,7 @@ CREATE TABLE car_conditions (
     car_id INT NOT NULL,
     name VARCHAR(20) NOT NULL,
     is_rentable BIT NOT NULL,
-    description TEXT NOT NULL,
+    description TEXT,
     
     CONSTRAINT FK_CarConditionsCar FOREIGN KEY (car_id) REFERENCES cars(id)
 );

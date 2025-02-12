@@ -17,6 +17,7 @@ import java.time.LocalDate;
         name = "car-model",
         attributeNodes = {
                 @NamedAttributeNode(value = "model", subgraph = "model-engine-gearbox"),
+                @NamedAttributeNode("carCondition")
         },
         subgraphs = {
                 @NamedSubgraph(
@@ -60,6 +61,9 @@ public class Car {
     @JoinColumn(name = "model_id")
     private Model model;
 
+    @OneToOne(mappedBy = "car", fetch = FetchType.LAZY,cascade = { CascadeType.PERSIST, CascadeType.REMOVE})
+    private CarCondition carCondition;
+
     public Car(int basePrice, int rentalPricePerDay, LocalDate insuranceExpiryDate, int mileage, LocalDate lastServiceDate, String registrationNumber) {
         this.basePrice = basePrice;
         this.rentalPricePerDay = rentalPricePerDay;
@@ -77,6 +81,11 @@ public class Car {
         this.insuranceExpiryDate = insuranceExpiryDate;
         this.rentalPricePerDay = rentalPricePerDay;
         this.basePrice = basePrice;
+    }
+
+    public void setCarCondition(CarCondition carCondition) {
+        this.carCondition = carCondition;
+        carCondition.setCar(this);
     }
 
     public String toStringDetails() {

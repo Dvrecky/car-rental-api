@@ -21,4 +21,5 @@ public class CarDTO {
     private int rentalPricePerDay;
     private int basePrice;
     private ModelDTO model;
+    private CarConditionDTO carCondition;
 }

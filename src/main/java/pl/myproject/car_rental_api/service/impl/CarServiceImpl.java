@@ -36,7 +36,14 @@ public class CarServiceImpl implements CarService {
     @Override
     public CarDTO saveCar(CarDTO carDTO) {
         Car car = modelMapper.map(carDTO, Car.class);
+
+        // 🔥 Ręcznie ustawiamy referencję dla relacji dwustronnej
+        if (car.getCarCondition() != null) {
+            car.getCarCondition().setCar(car);
+        }
+
         Car newCar = carRepository.save(car);
+
         return modelMapper.map(newCar, CarDTO.class);
     }
 
