@@ -4,6 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
+import pl.myproject.car_rental_api.dto.CarBaseInfoDTO;
 import pl.myproject.car_rental_api.dto.CarDTO;
 import pl.myproject.car_rental_api.entity.Car;
 
@@ -45,6 +46,17 @@ public class CarServiceImpl implements CarService {
         Car newCar = carRepository.save(car);
 
         return modelMapper.map(newCar, CarDTO.class);
+    }
+
+    @Override
+    public List<CarBaseInfoDTO> getCarBaseViewDTOList() {
+
+        return carRepository.findAllCarBaseInfo();
+
+//        return carRepository.findAllCarBaseInfo()
+//                .stream()
+//                .map( carInfo -> modelMapper.map(carInfo, CarBaseInfoDTO.class))
+//                .toList();
     }
 
     @Override

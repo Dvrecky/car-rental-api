@@ -1,5 +1,6 @@
 package pl.myproject.car_rental_api.service;
 
+import pl.myproject.car_rental_api.dto.CarBaseInfoDTO;
 import pl.myproject.car_rental_api.dto.CarDTO;
 import pl.myproject.car_rental_api.entity.Car;
 
@@ -10,6 +11,8 @@ public interface CarService {
     List<CarDTO> getAllCarsWithDetails();
 
     CarDTO saveCar(CarDTO carDTO);
+
+    List<CarBaseInfoDTO> getCarBaseViewDTOList();
 
     CarDTO getCarDTOByIdWithDetails(int id);
 

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import pl.myproject.car_rental_api.dto.CarBaseInfoDTO;
 import pl.myproject.car_rental_api.dto.CarDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
@@ -27,6 +28,11 @@ public class CarController {
         List<CarDTO> carDTOS = carService.getAllCarsWithDetails();
 
         return ResponseEntity.ok(carDTOS);
+    }
+
+    @GetMapping("/base-info")
+    public ResponseEntity<List<CarBaseInfoDTO>> getCarBaseInfoList() {
+        return ResponseEntity.ok(carService.getCarBaseViewDTOList());
     }
 
     @GetMapping("/{id}")

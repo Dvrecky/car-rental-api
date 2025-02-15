@@ -4,10 +4,7 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.dto.EngineDTO;
-import pl.myproject.car_rental_api.dto.GearboxDTO;
-import pl.myproject.car_rental_api.dto.ModelDTO;
+import pl.myproject.car_rental_api.dto.*;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.math.BigDecimal;

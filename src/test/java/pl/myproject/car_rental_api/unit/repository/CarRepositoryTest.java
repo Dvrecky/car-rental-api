@@ -9,6 +9,7 @@ import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
 import pl.myproject.car_rental_api.entity.Model;
+import pl.myproject.car_rental_api.projection.CarBaseInfoProjection;
 import pl.myproject.car_rental_api.repository.CarRepository;
 
 import java.math.BigDecimal;
@@ -18,7 +19,6 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.InstanceOfAssertFactories.spliterator;
 
 @DataJpaTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -311,6 +311,17 @@ public class CarRepositoryTest {
             System.out.println("Car: " + car);
             System.out.println();
         }
+    }
+
+    @Test
+    @Order(7)
+    @DisplayName("Test 7: Retrieving list of car base view")
+    public void getListOfBaseCarView() {
+
+//        List<CarBaseInfoProjection> baseInfoProjectionList = carRepository.findAllCarBaseInfo();
+//
+//        assertThat(baseInfoProjectionList.size()).isEqualTo(3);
+
     }
 
 
