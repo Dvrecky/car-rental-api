@@ -1,6 +1,8 @@
-package pl.myproject.car_rental_api.dto;
+package pl.myproject.car_rental_api.dto.model;
 
 import lombok.*;
+import pl.myproject.car_rental_api.dto.engine.EngineDTO;
+import pl.myproject.car_rental_api.dto.gearbox.GearboxDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;

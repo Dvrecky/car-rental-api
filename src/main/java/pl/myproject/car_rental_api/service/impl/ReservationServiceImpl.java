@@ -4,9 +4,9 @@ import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import pl.myproject.car_rental_api.dto.AddReservationDTO;
-import pl.myproject.car_rental_api.dto.ReservationDTO;
-import pl.myproject.car_rental_api.dto.UpdateReservationDateDTO;
+import pl.myproject.car_rental_api.dto.reservation.AddReservationDTO;
+import pl.myproject.car_rental_api.dto.reservation.ReservationDTO;
+import pl.myproject.car_rental_api.dto.reservation.UpdateReservationDateDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.entity.Reservation;
@@ -51,7 +51,7 @@ public class ReservationServiceImpl implements ReservationService {
         Reservation reservation = defaultModelMapper.map(addReservationDTO, Reservation.class);
 
         // getting car by id for given reservation
-        Car car = carService.getCarByIdWithDetails(carId);
+        Car car = carService.getCarWithDetailsById(carId);
         reservation.setCar(car);
 
         // changing availability for reservation period

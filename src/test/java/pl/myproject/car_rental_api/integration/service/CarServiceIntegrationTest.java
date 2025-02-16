@@ -4,7 +4,10 @@ import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Rollback;
-import pl.myproject.car_rental_api.dto.*;
+import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
+import pl.myproject.car_rental_api.dto.engine.EngineDTO;
+import pl.myproject.car_rental_api.dto.gearbox.GearboxDTO;
+import pl.myproject.car_rental_api.dto.model.ModelDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.math.BigDecimal;
@@ -66,7 +69,7 @@ public class CarServiceIntegrationTest {
                 .gearbox(gearboxDTO)
                 .build();
 
-        CarDTO carDTO = CarDTO.builder()
+        CarDetailsDTO carDTO = CarDetailsDTO.builder()
                 .registrationNumber("ABC12345")
                 .vin("WBA3D31000F300276")
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
@@ -78,7 +81,7 @@ public class CarServiceIntegrationTest {
                 .build();
 
         // calling saveCar() method on carService
-        CarDTO result = carService.saveCar(carDTO);
+        CarDetailsDTO result = carService.saveCar(carDTO);
 
         // checking data correctness
         assertThat(result).isNotNull();
@@ -101,7 +104,7 @@ public class CarServiceIntegrationTest {
 
         // calling service method
         int id = 4;
-        CarDTO carDTO = carService.getCarDTOByIdWithDetails(id);
+        CarDetailsDTO carDTO = carService.getCarDTOWithDetailsById(id);
 
         // checking data correctness
         assertThat(carDTO).isNotNull();
@@ -127,9 +130,9 @@ public class CarServiceIntegrationTest {
         int id = 4;
         carService.deleteCarById(id);
 
-        List<CarDTO> carDTOs = carService.getAllCarsWithDetails();
+        List<CarDetailsDTO> carDTOs = carService.getAllCarsWithDetails();
 
-        CarDTO testCarDTO = carDTOs.stream()
+        CarDetailsDTO testCarDTO = carDTOs.stream()
                 .filter( carDTO -> carDTO.getId() == id)
                 .findFirst()
                 .orElse(null);
@@ -143,7 +146,7 @@ public class CarServiceIntegrationTest {
     public void getCarDTOs() {
 
         // getting cars DTO
-        List<CarDTO> carDTOList = carService.getAllCarsWithDetails();
+        List<CarDetailsDTO> carDTOList = carService.getAllCarsWithDetails();
 
         // checking if list is not null
         assertThat(carDTOList).isNotNull();
@@ -151,7 +154,7 @@ public class CarServiceIntegrationTest {
         assertThat(carDTOList.size()).isEqualTo(3);
 
         // getting a carDTO with given registration number
-        CarDTO testCarDTO = carDTOList.stream()
+        CarDetailsDTO testCarDTO = carDTOList.stream()
                 .filter(car -> car.getRegistrationNumber().equals("LMN9876"))
                         .findFirst()
                                 .orElse(null);
@@ -165,7 +168,7 @@ public class CarServiceIntegrationTest {
 
         // displaying car dto
         System.out.println("-------------------------------------------------------------------------------------------");
-        for (CarDTO carDTO : carDTOList) {
+        for (CarDetailsDTO carDTO : carDTOList) {
             System.out.println();
             System.out.println("CarDTO: " + carDTO);
         }

@@ -6,15 +6,14 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.config.Configuration;
-import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.dto.EngineDTO;
-import pl.myproject.car_rental_api.dto.GearboxDTO;
-import pl.myproject.car_rental_api.dto.ModelDTO;
+import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
+import pl.myproject.car_rental_api.dto.engine.EngineDTO;
+import pl.myproject.car_rental_api.dto.gearbox.GearboxDTO;
+import pl.myproject.car_rental_api.dto.model.ModelDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
 import pl.myproject.car_rental_api.entity.Model;
-import pl.myproject.car_rental_api.repository.CarAvailabilityRepository;
 import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.service.CarService;
 import pl.myproject.car_rental_api.service.impl.CarServiceImpl;
@@ -98,7 +97,7 @@ public class CarServiceTest {
                 .gearbox(gearboxDTO)
                 .build();
 
-        CarDTO carDTO = CarDTO.builder()
+        CarDetailsDTO carDTO = CarDetailsDTO.builder()
                 .registrationNumber("ABC12345")
                 .vin("WBA3D31000F300276")
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
@@ -168,7 +167,7 @@ public class CarServiceTest {
         given(carRepository.save(any(Car.class))).willReturn(car);
 
         // calling saveCar() method
-        CarDTO result = carService.saveCar(carDTO);
+        CarDetailsDTO result = carService.saveCar(carDTO);
 
         // checking data correctness
         assertThat(result).isNotNull();
@@ -247,10 +246,10 @@ public class CarServiceTest {
                 .build();
 
         // mocking carRepository behaviour to return car entity
-        given(carRepository.findByIdWithDetails(i)).willReturn(Optional.of(car));
+        given(carRepository.findCarWithDetailsById(i)).willReturn(Optional.of(car));
 
         // calling service method
-        CarDTO result = carService.getCarDTOByIdWithDetails(i);
+        CarDetailsDTO result = carService.getCarDTOWithDetailsById(i);
 
         // checking data correctness
         assertThat(result).isNotNull();
@@ -402,16 +401,16 @@ public class CarServiceTest {
                 .build();
 
         // carRepository will return list of car1 and car2 when invoking getAllCarsWithDetails method
-        given(carRepository.getAllCarsWithDetails()).willReturn(List.of(car1, car2));
+        given(carRepository.findAllCarsWithDetails()).willReturn(List.of(car1, car2));
 
         // retrieving list of cars with service
-        List<CarDTO> carDTOs = carService.getAllCarsWithDetails();
+        List<CarDetailsDTO> carDTOs = carService.getAllCarsWithDetails();
 
         assertThat(carDTOs).isNotNull();
         assertThat(carDTOs.size()).isEqualTo(2);
 
         // getting carDTO with given data
-        CarDTO testCarDTO = carDTOs.stream()
+        CarDetailsDTO testCarDTO = carDTOs.stream()
                 .filter(car -> car.getRegistrationNumber().equals("ABC12345"))
                 .findFirst()
                 .orElse(null);
@@ -425,7 +424,7 @@ public class CarServiceTest {
 
         // displaying carDTOs list
         System.out.println("-------------------------------------------------------------------------------");
-        for(CarDTO carDTO : carDTOs) {
+        for(CarDetailsDTO carDTO : carDTOs) {
             System.out.println();
             System.out.println("CarDTO: " + carDTO);
         }

@@ -10,10 +10,10 @@ import org.springframework.http.MediaType;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
-import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.dto.EngineDTO;
-import pl.myproject.car_rental_api.dto.GearboxDTO;
-import pl.myproject.car_rental_api.dto.ModelDTO;
+import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
+import pl.myproject.car_rental_api.dto.engine.EngineDTO;
+import pl.myproject.car_rental_api.dto.gearbox.GearboxDTO;
+import pl.myproject.car_rental_api.dto.model.ModelDTO;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -82,7 +82,7 @@ public class CarControllerIntegrationTest {
                 .gearbox(gearboxDTO)
                 .build();
 
-        CarDTO carDTO = CarDTO.builder()
+        CarDetailsDTO carDTO = CarDetailsDTO.builder()
                 .registrationNumber("QWER123")
                 .vin("WUAZZZF21SN903325")
                 .lastServiceDate(LocalDate.of(2023, 6, 15))

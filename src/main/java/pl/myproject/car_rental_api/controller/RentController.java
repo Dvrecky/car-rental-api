@@ -3,9 +3,9 @@ package pl.myproject.car_rental_api.controller;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.myproject.car_rental_api.dto.AddRentDTO;
-import pl.myproject.car_rental_api.dto.RentDTO;
-import pl.myproject.car_rental_api.dto.UpdateRentDTO;
+import pl.myproject.car_rental_api.dto.rent.AddRentDTO;
+import pl.myproject.car_rental_api.dto.rent.RentDTO;
+import pl.myproject.car_rental_api.dto.rent.UpdateRentDTO;
 import pl.myproject.car_rental_api.service.RentService;
 
 @RestController

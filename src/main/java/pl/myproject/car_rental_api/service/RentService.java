@@ -1,8 +1,8 @@
 package pl.myproject.car_rental_api.service;
 
-import pl.myproject.car_rental_api.dto.AddRentDTO;
-import pl.myproject.car_rental_api.dto.RentDTO;
-import pl.myproject.car_rental_api.dto.UpdateRentDTO;
+import pl.myproject.car_rental_api.dto.rent.AddRentDTO;
+import pl.myproject.car_rental_api.dto.rent.RentDTO;
+import pl.myproject.car_rental_api.dto.rent.UpdateRentDTO;
 
 public interface RentService {
 

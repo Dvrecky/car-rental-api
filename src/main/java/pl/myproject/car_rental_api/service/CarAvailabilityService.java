@@ -1,7 +1,7 @@
 package pl.myproject.car_rental_api.service;
 
-import pl.myproject.car_rental_api.dto.StatusDTO;
-import pl.myproject.car_rental_api.dto.UpdateReservationDateDTO;
+import pl.myproject.car_rental_api.dto.other.StatusDTO;
+import pl.myproject.car_rental_api.dto.reservation.UpdateReservationDateDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 

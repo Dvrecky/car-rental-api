@@ -4,8 +4,10 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import pl.myproject.car_rental_api.dto.CarBaseInfoDTO;
-import pl.myproject.car_rental_api.dto.CarDTO;
+import pl.myproject.car_rental_api.dto.car.CarBaseInfoDTO;
+import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
+import pl.myproject.car_rental_api.dto.car.CarListViewDTO;
+import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
 import pl.myproject.car_rental_api.entity.Car;
 
 import pl.myproject.car_rental_api.repository.CarRepository;
@@ -26,16 +28,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public List<CarDTO> getAllCarsWithDetails() {
+    public List<CarDetailsDTO> getAllCarsWithDetails() {
 
-        return carRepository.getAllCarsWithDetails()
+        return carRepository.findAllCarsWithDetails()
                 .stream()
-                .map(entity -> modelMapper.map(entity, CarDTO.class))
+                .map(entity -> modelMapper.map(entity, CarDetailsDTO.class))
                 .toList();
     }
 
     @Override
-    public CarDTO saveCar(CarDTO carDTO) {
+    public CarDetailsDTO saveCar(CarDetailsDTO carDTO) {
         Car car = modelMapper.map(carDTO, Car.class);
 
         // 🔥 Ręcznie ustawiamy referencję dla relacji dwustronnej
@@ -45,13 +47,13 @@ public class CarServiceImpl implements CarService {
 
         Car newCar = carRepository.save(car);
 
-        return modelMapper.map(newCar, CarDTO.class);
+        return modelMapper.map(newCar, CarDetailsDTO.class);
     }
 
     @Override
-    public List<CarBaseInfoDTO> getCarBaseViewDTOList() {
+    public List<CarBaseInfoDTO> getCarsBaseView() {
 
-        return carRepository.findAllCarBaseInfo();
+        return carRepository.findAllCarsBaseInfo();
 
 //        return carRepository.findAllCarBaseInfo()
 //                .stream()
@@ -60,13 +62,26 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDTO getCarDTOByIdWithDetails(int id) {
-        Car car = carRepository.findByIdWithDetails(id).get();
-        return modelMapper.map(car, CarDTO.class);
+    public List<CarListViewDTO> getCarListView() {
+        return carRepository.findAllCarsListView()
+                .stream()
+                .map( car -> modelMapper.map(car, CarListViewDTO.class))
+                .toList();
     }
 
-    public Car getCarByIdWithDetails(int id) {
-        return carRepository.findByIdWithDetails(id).get();
+    @Override
+    public CarSummaryInfoDTO getCarSummaryById(int id) {
+        return carRepository.findCarSummaryInfoById(id);
+    }
+
+    @Override
+    public CarDetailsDTO getCarDTOWithDetailsById(int id) {
+        Car car = carRepository.findCarWithDetailsById(id).get();
+        return modelMapper.map(car, CarDetailsDTO.class);
+    }
+
+    public Car getCarWithDetailsById(int id) {
+        return carRepository.findCarWithDetailsById(id).get();
     }
 
     @Override
@@ -75,10 +90,10 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarDTO updateCar(CarDTO carDTO) {
+    public CarDetailsDTO updateCar(CarDetailsDTO carDTO) {
 
         Car car = modelMapper.map(carDTO, Car.class);
         Car updatedCar = carRepository.save(car);
-        return modelMapper.map(updatedCar, CarDTO.class);
+        return modelMapper.map(updatedCar, CarDetailsDTO.class);
     }
 }

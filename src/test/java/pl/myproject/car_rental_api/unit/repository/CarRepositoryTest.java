@@ -123,7 +123,7 @@ public class CarRepositoryTest {
     public void findCarById() {
 
         int id = 4;
-        Car car = carRepository.findByIdWithDetails(id).orElseThrow(() ->
+        Car car = carRepository.findCarWithDetailsById(id).orElseThrow(() ->
             new IllegalStateException("Car with id: " + id + " not found")
         );
 
@@ -146,7 +146,7 @@ public class CarRepositoryTest {
     public void findCarByVin() {
 
         String vin = "WUAZZZF21SN903325";
-        Car car = carRepository.findByVin(vin)
+        Car car = carRepository.findCarByVin(vin)
                                     .orElseThrow( () -> new NoSuchElementException("Car not found for vin: " + vin));
 
         assertThat(car.getVin()).isEqualTo(vin);
@@ -169,7 +169,7 @@ public class CarRepositoryTest {
         int id = 3;
         carRepository.deleteById(id);
 
-        Optional<Car> carOptional = carRepository.findByIdWithDetails(id);
+        Optional<Car> carOptional = carRepository.findCarWithDetailsById(id);
         assertThat(carOptional).isEmpty();
     }
 
@@ -236,7 +236,7 @@ public class CarRepositoryTest {
 
         // retrieving car with given ID
         int id = 2;
-        Car car = carRepository.findByIdWithDetails(id)
+        Car car = carRepository.findCarWithDetailsById(id)
                                         .orElseThrow( () -> new NoSuchElementException("Car not found for ID: " + id));
 
         // printing Car data
@@ -276,7 +276,7 @@ public class CarRepositoryTest {
     public void getAllCarsWithDetails() {
 
         // retrieving list of cars with related engine and gearbix
-        List<Car> carList = carRepository.getAllCarsWithDetails();
+        List<Car> carList = carRepository.findAllCarsWithDetails();
 
         // checking if carList is not null
         assertThat(carList).isNotNull();

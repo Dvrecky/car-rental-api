@@ -5,8 +5,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.myproject.car_rental_api.dto.CarBaseInfoDTO;
-import pl.myproject.car_rental_api.dto.CarDTO;
+import pl.myproject.car_rental_api.dto.car.CarBaseInfoDTO;
+import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
+import pl.myproject.car_rental_api.dto.car.CarListViewDTO;
+import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.util.List;
@@ -22,45 +24,44 @@ public class CarController {
         this.carService = carService;
     }
 
-    @GetMapping
-    public ResponseEntity<List<CarDTO>> getCarsWithDetails() {
-
-        List<CarDTO> carDTOS = carService.getAllCarsWithDetails();
-
-        return ResponseEntity.ok(carDTOS);
+    @GetMapping("/details")
+    public ResponseEntity<List<CarDetailsDTO>> getCarListWithDetails() {
+        return ResponseEntity.ok(carService.getAllCarsWithDetails());
     }
 
     @GetMapping("/base-info")
-    public ResponseEntity<List<CarBaseInfoDTO>> getCarBaseInfoList() {
-        return ResponseEntity.ok(carService.getCarBaseViewDTOList());
+    public ResponseEntity<List<CarBaseInfoDTO>> getCarListSummary() {
+        return ResponseEntity.ok(carService.getCarsBaseView());
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<CarDTO> getCarById(@PathVariable int id) {
+    @GetMapping("/list-view")
+    public ResponseEntity<List<CarListViewDTO>> getCarListView() {
+        return ResponseEntity.ok(carService.getCarListView());
+    }
 
-        CarDTO carDTO = carService.getCarDTOByIdWithDetails(id);
+    @GetMapping("/{id}/details")
+    public ResponseEntity<CarDetailsDTO> getCarWithDetailsById(@PathVariable int id) {
+        return ResponseEntity.ok(carService.getCarDTOWithDetailsById(id));
+    }
 
-        return ResponseEntity.ok(carDTO);
+    @GetMapping("/{id}/overview")
+    public ResponseEntity<CarSummaryInfoDTO> getCarSummaryById(@PathVariable int id) {
+        return ResponseEntity.ok(carService.getCarSummaryById(id));
     }
 
     @PostMapping
-    public ResponseEntity<CarDTO> addCarWithDetails(@RequestBody CarDTO carDTO) {
-
-        carDTO.setId(0);
-
-        CarDTO savedCarDTO = carService.saveCar(carDTO);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(savedCarDTO);
+    public ResponseEntity<CarDetailsDTO> addCarWithDetails(@RequestBody CarDetailsDTO carDTO) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(carService.saveCar(carDTO));
     }
 
     @PutMapping
-    public ResponseEntity<CarDTO> updateCar(@RequestBody CarDTO carDTO) {
-        CarDTO updatedCarDTO = carService.updateCar(carDTO);
-        return ResponseEntity.ok(updatedCarDTO);
+    public ResponseEntity<CarDetailsDTO> updateCar(@RequestBody CarDetailsDTO carDTO) {
+        return ResponseEntity.ok(carService.updateCar(carDTO));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteCarById(@PathVariable int id) {
+
         carService.deleteCarById(id);
 
         return ResponseEntity.ok("Car with ID: " + id + " removed successfully");

@@ -1,4 +1,4 @@
-package pl.myproject.car_rental_api.dto;
+package pl.myproject.car_rental_api.dto.other;
 
 import lombok.*;
 

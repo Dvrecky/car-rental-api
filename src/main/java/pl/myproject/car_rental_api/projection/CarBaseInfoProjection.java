@@ -8,11 +8,10 @@ public interface CarBaseInfoProjection {
     int getRentalPricePerDay();
     String getFullName();   // brand + name
     String getTypeOfDrive();
-    int getNumberOfSeats();
     BigDecimal getAccelerationTime();
     BigDecimal getCapacity();
     int getHorsepower();
     int getTorque();
     String getCylinderConfiguration();
-    int getNumberOfGears();
+    int getGearboxType();
 }

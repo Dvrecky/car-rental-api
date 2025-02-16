@@ -1,6 +1,7 @@
-package pl.myproject.car_rental_api.dto;
+package pl.myproject.car_rental_api.dto.reservation;
 
 import lombok.*;
+import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
 
 import java.time.LocalDateTime;
 
@@ -10,7 +11,7 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @ToString
-public class AddReservationDTO {
+public class ReservationDTO {
 
     private long id;
     private LocalDateTime bookingDate;
@@ -20,5 +21,5 @@ public class AddReservationDTO {
     private String paymentMethod;
     private String status;
     private String remarks;
-    private int carId;
+    private CarDetailsDTO carDTO;
 }

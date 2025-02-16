@@ -1,6 +1,8 @@
-package pl.myproject.car_rental_api.dto;
+package pl.myproject.car_rental_api.dto.car;
 
 import lombok.*;
+import pl.myproject.car_rental_api.dto.other.CarConditionDTO;
+import pl.myproject.car_rental_api.dto.model.ModelDTO;
 
 import java.time.LocalDate;
 
@@ -10,7 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @ToString
-public class CarDTO {
+public class CarDetailsDTO {
 
     private int id;
     private String registrationNumber;

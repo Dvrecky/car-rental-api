@@ -9,10 +9,10 @@ import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import pl.myproject.car_rental_api.controller.CarController;
-import pl.myproject.car_rental_api.dto.CarDTO;
-import pl.myproject.car_rental_api.dto.EngineDTO;
-import pl.myproject.car_rental_api.dto.GearboxDTO;
-import pl.myproject.car_rental_api.dto.ModelDTO;
+import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
+import pl.myproject.car_rental_api.dto.engine.EngineDTO;
+import pl.myproject.car_rental_api.dto.gearbox.GearboxDTO;
+import pl.myproject.car_rental_api.dto.model.ModelDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -91,7 +91,7 @@ public class CarControllerTest {
                 .gearbox(gearboxDTO1)
                 .build();
 
-        CarDTO carDTO1 = CarDTO.builder()
+        CarDetailsDTO carDTO1 = CarDetailsDTO.builder()
                 .id(1)
                 .registrationNumber("ABC12345")
                 .vin("WBA3D31000F300276")
@@ -143,7 +143,7 @@ public class CarControllerTest {
                 .gearbox(gearboxDTO)
                 .build();
 
-        CarDTO carDTO = CarDTO.builder()
+        CarDetailsDTO carDTO = CarDetailsDTO.builder()
                 .registrationNumber("ABC12345")
                 .vin("WBA3D31000F300276")
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
@@ -155,7 +155,7 @@ public class CarControllerTest {
                 .build();
 
         // mocking carService.saveCar() behaviour to return carDTO with id value
-        given(carService.saveCar(any(CarDTO.class))).willReturn(carDTO1);
+        given(carService.saveCar(any(CarDetailsDTO.class))).willReturn(carDTO1);
 
         // sending POST request to "/api/cars"
         ResultActions result = mockMvc.perform(post("/api/cars")
@@ -222,7 +222,7 @@ public class CarControllerTest {
                 .gearbox(gearboxDTO)
                 .build();
 
-        CarDTO carDTO = CarDTO.builder()
+        CarDetailsDTO carDTO = CarDetailsDTO.builder()
                 .id(i)
                 .registrationNumber("ABC12345")
                 .vin("WBA3D31000F300276")
@@ -235,7 +235,7 @@ public class CarControllerTest {
                 .build();
 
         // mocking carService.getCarByIdWithDetails() behaviour to return carDTO
-        given(carService.getCarDTOByIdWithDetails(i)).willReturn(carDTO);
+        given(carService.getCarDTOWithDetailsById(i)).willReturn(carDTO);
 
         // sending GET request to "/api/cars/{id}"
         ResultActions response = mockMvc.perform(get("/api/cars/{id}", i));
@@ -361,7 +361,7 @@ public class CarControllerTest {
                 .build();
 
         // creating Car objects
-        CarDTO carDTO1 = CarDTO.builder()
+        CarDetailsDTO carDTO1 = CarDetailsDTO.builder()
                 .id(1)
                 .registrationNumber("ABC12345")
                 .vin("WBA3D31000F300276")
@@ -373,7 +373,7 @@ public class CarControllerTest {
                 .model(modelDTO1)
                 .build();
 
-        CarDTO carDTO2 = CarDTO.builder()
+        CarDetailsDTO carDTO2 = CarDetailsDTO.builder()
                 .id(2)
                 .registrationNumber("XYZ67890")
                 .vin("VNKVNKVNK45696969")
