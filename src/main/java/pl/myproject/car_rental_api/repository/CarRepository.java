@@ -116,7 +116,7 @@ public interface CarRepository extends JpaRepository <Car, Integer> {
                 c.vin as vin,
                 concat(m.name, ' ', m.brand) as fullName
             FROM Car c
-            JOin c.model m
+            JOIN c.model m
             """)
     List<CarListViewProjection> findAllCarsListView();
 }

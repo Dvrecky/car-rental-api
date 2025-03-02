@@ -2,10 +2,13 @@ package pl.myproject.car_rental_api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -38,5 +41,17 @@ public class SecurityConfig {
     @Bean
     public CompromisedPasswordChecker passwordChecker() {
         return new HaveIBeenPwnedRestApiPasswordChecker();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(UserDetailsService userDetailsService,
+                                                       PasswordEncoder passwordEncoder) {
+
+        EmailPasswordAuthenticationProvider authenticationProvider =
+                new EmailPasswordAuthenticationProvider(userDetailsService, passwordEncoder);
+
+        ProviderManager providerManager = new ProviderManager(authenticationProvider);
+
+        return providerManager;
     }
 }

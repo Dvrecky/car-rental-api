@@ -8,8 +8,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import pl.myproject.car_rental_api.entity.Reservation;
+import pl.myproject.car_rental_api.projection.ClientReservationBaseView;
 
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -35,4 +37,21 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
     @Modifying
     @Query("UPDATE Reservation SET status = :status WHERE id = :id")
     void changeStatus(@Param("id") long reservationId, @Param("status") String newStatus);
+
+    @Query("""
+            SELECT
+                r.id as id,
+                r.bookingDate as bookingDate,
+                r.startDate as startDate,
+                r.endDate as endDate,
+                r.status as status,
+                c.id as carId,
+                concat(m.name, ' ',m.brand) as carFullName,
+                m.photoUrl as photoUrl
+            FROM Reservation r
+            JOIN r.car c
+            JOIN c.model m
+            WHERE r.user.id = :userId
+            """)
+    List<ClientReservationBaseView> findAllReservationsBaseView(long userId);
 }

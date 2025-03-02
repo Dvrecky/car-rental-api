@@ -6,7 +6,10 @@ import org.springframework.web.bind.annotation.*;
 import pl.myproject.car_rental_api.dto.reservation.AddReservationDTO;
 import pl.myproject.car_rental_api.dto.reservation.ReservationDTO;
 import pl.myproject.car_rental_api.dto.reservation.UpdateReservationDateDTO;
+import pl.myproject.car_rental_api.projection.ClientReservationBaseView;
 import pl.myproject.car_rental_api.service.ReservationService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/reservations")
@@ -42,5 +45,11 @@ public class ReservationController {
         ReservationDTO canceledReservationDTO = reservationService.cancelReservation(reservationId);
 
         return ResponseEntity.ok(canceledReservationDTO);
+    }
+
+    @GetMapping("/user/{id}")
+    public ResponseEntity<List<ClientReservationBaseView>> getReservationsByClientId(@PathVariable("id") long clientId) {
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(reservationService.getReservationsByClientId(clientId));
     }
 }

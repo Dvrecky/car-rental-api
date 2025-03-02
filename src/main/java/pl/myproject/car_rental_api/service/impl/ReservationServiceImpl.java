@@ -10,12 +10,14 @@ import pl.myproject.car_rental_api.dto.reservation.UpdateReservationDateDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.entity.Reservation;
+import pl.myproject.car_rental_api.projection.ClientReservationBaseView;
 import pl.myproject.car_rental_api.repository.ReservationRepository;
 import pl.myproject.car_rental_api.service.CarAvailabilityService;
 import pl.myproject.car_rental_api.service.CarService;
 import pl.myproject.car_rental_api.service.ReservationService;
 
 import java.time.LocalDate;
+import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
@@ -118,5 +120,11 @@ public class ReservationServiceImpl implements ReservationService {
         if(!reservation.getStatus().equalsIgnoreCase("CONFIRMED")) {
             throw new NoSuchElementException("Reservation has a " + reservation.getStatus() + " status");
         }
+    }
+
+    @Override
+    public List<ClientReservationBaseView> getReservationsByClientId(long id) {
+
+        return reservationRepository.findAllReservationsBaseView(id);
     }
 }
