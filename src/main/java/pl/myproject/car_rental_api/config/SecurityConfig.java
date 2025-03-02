@@ -49,6 +49,8 @@ public class SecurityConfig {
 
                 .requestMatchers("/api/car-availability/**").hasAnyRole("CLIENT", "EMPLOYEE")
 
+                .requestMatchers(HttpMethod.POST, "/api/clients/register").permitAll()
+
         );
 
 
