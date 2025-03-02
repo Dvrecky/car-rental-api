@@ -2,6 +2,7 @@ package pl.myproject.car_rental_api.config;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.ProviderManager;
 import org.springframework.security.authentication.password.CompromisedPasswordChecker;
@@ -13,6 +14,7 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -21,14 +23,30 @@ public class SecurityConfig {
 
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-        http.authorizeHttpRequests((requests) -> requests.anyRequest().authenticated());
+
         // backend won't maintain user session, backend will be stateless
-        http.sessionManagement( sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
+        http.sessionManagement( sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+        // securing endpoint
+        .authorizeHttpRequests((requests) -> requests
+                .requestMatchers("/api/cars/list-view").hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/cars/*/details")).hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/cars").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.DELETE, "/api/cars/**").hasRole("ADMIN")
+                .requestMatchers("/api/cars/details").hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.PUT, "/api/cars").hasRole("EMPLOYEE")
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/cars/*/overview")).permitAll()
+                .requestMatchers("/api/cars/base-info").permitAll()
+
+        );
+
+
+
         // disabling formLogin
         http.formLogin(AbstractHttpConfigurer::disable);
         // disabling cors and csrf
         http.cors(AbstractHttpConfigurer::disable);
-        http.csrf(AbstractHttpConfigurer::disable);
+//        http.csrf(AbstractHttpConfigurer::disable);
+        http.csrf(csrgConf -> csrgConf.disable());
         http.httpBasic(withDefaults());
         return http.build();
     }
