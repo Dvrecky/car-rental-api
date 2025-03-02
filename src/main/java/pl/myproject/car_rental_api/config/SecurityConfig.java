@@ -51,6 +51,8 @@ public class SecurityConfig {
 
                 .requestMatchers(HttpMethod.POST, "/api/clients/register").permitAll()
 
+                .requestMatchers(HttpMethod.POST, "/api/employees").hasRole("ADMIN")
+
         );
 
 
