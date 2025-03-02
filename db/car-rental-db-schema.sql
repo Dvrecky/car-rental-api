@@ -10,7 +10,7 @@ COLLATE utf8mb4_unicode_ci;
 USE carRentalDb;
 
 CREATE TABLE engines(
-	id INT PRIMARY KEY AUTO_INCREMENT,
+	id INT PRIMARY KEY AUTO_INCREMENT, -- primary key obejmuje unique oraz not null
     capacity DECIMAL(3, 1) NOT NULL,
     horsepower SMALLINT NOT NULL,
     torque SMALLINT NOT NULL,
@@ -49,10 +49,10 @@ CREATE TABLE models(
     description TEXT NOT NULL,
     engine_id INT NOT NULL,
     gearbox_id INT NOT NULL,
-    
+
     CONSTRAINT FK_ModelEngine FOREIGN KEY (engine_id) REFERENCES engines(id),
     CONSTRAINT FK_ModelGearboxes FOREIGN KEY (gearbox_id) REFERENCES gearboxes(id)
-    
+
 );
 
 CREATE TABLE cars (
@@ -74,8 +74,8 @@ CREATE TABLE car_conditions (
     car_id INT NOT NULL,
     name VARCHAR(20) NOT NULL,
     is_rentable BIT NOT NULL,
-    description TEXT,
-    
+    description TEXT NOT NULL,
+
     CONSTRAINT FK_CarConditionsCar FOREIGN KEY (car_id) REFERENCES cars(id)
 );
 
@@ -83,8 +83,8 @@ CREATE TABLE car_availability (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     car_id INT NOT NULL,
     status VARCHAR(30) NOT NULL,
-    from_date DATETIME NOT NULL,
-    to_date DATETIME NOT NULL,
+    start_date DATETIME NOT NULL,
+    end_date DATETIME NOT NULL,
 
     CONSTRAINT FK_CarAvailability FOREIGN KEY (car_id) REFERENCES cars(id)
 );
@@ -96,9 +96,34 @@ CREATE TABLE equipments (
     description TEXT NOT NULL
 );
 
+CREATE TABLE users (
+	id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    first_name VARCHAR(50) NOT NULL,
+    last_name VARCHAR(50) NOT NULL,
+    e_mail VARCHAR(100) NOT NULL UNIQUE,
+    password VARCHAR(255) NOT NULL,
+    phone_number VARCHAR(20) NOT NULL,
+    creation_date DATETIME NOT NULL
+);
+
+CREATE TABLE roles (
+	id INT PRIMARY KEY AUTO_INCREMENT,
+    name ENUM("ROLE_CLIENT", "ROLE_EMPLOYEE", "ROLE_ADMIN")
+);
+
+CREATE TABLE user_role (
+	user_id BIGINT NOT NULL,
+    role_id INT NOT NULL,
+
+    PRIMARY KEY (user_id, role_id),
+    CONSTRAINT FK_UserRoleUser FOREIGN KEY (user_id) REFERENCES users(id),
+    CONSTRAINT FK_UserRoleRole FOREIGN KEY (role_id) REFERENCES roles(id)
+);
+
 CREATE TABLE reservations (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     car_id INT NOT NULL,
+    user_id BIGINT NOT NULL,
     booking_date DATETIME NOT NULL,
     start_date DATETIME NOT NULL,
     end_date DATETIME NOT NULL,
@@ -106,8 +131,9 @@ CREATE TABLE reservations (
     payment_method VARCHAR(30) NOT NULL,
     status VARCHAR(20) NOT NULL,
     remarks TEXT,
-    
-    CONSTRAINT FK_ReservationCar FOREIGN KEY (car_id) REFERENCES cars(id)
+
+    CONSTRAINT FK_ReservationCar FOREIGN KEY (car_id) REFERENCES cars(id),
+    CONSTRAINT FK_ReservationUser FOREIGN KEY (user_id) REFERENCES users(id)
 );
 
 CREATE TABLE rents (
@@ -116,8 +142,8 @@ CREATE TABLE rents (
     rental_start_date DATETIME NOT NULL,
     rental_end_date DATETIME,
     damage_report TEXT,
-    penalty_fee INT,
-    update_date DATETIME NOT NULL,
+    penalty_fee INT DEFAULT 0,
+    update_date DATETIME DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(30) NOT NULL,
     
     CONSTRAINT FK_RentReservation FOREIGN KEY (reservation_id) REFERENCES reservations(id)
