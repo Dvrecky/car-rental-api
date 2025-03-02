@@ -17,5 +17,5 @@ public interface ReservationService {
 
     void isReservationConfirmed(long reservationId);
 
-    List<ClientReservationBaseView> getReservationsByClientId(long id);
+    List<ClientReservationBaseView> getReservationsByClientId(long clientId);
 }

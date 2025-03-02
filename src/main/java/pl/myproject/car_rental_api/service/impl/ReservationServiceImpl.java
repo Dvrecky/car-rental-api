@@ -123,8 +123,8 @@ public class ReservationServiceImpl implements ReservationService {
     }
 
     @Override
-    public List<ClientReservationBaseView> getReservationsByClientId(long id) {
+    public List<ClientReservationBaseView> getReservationsByClientId(long clientId) {
 
-        return reservationRepository.findAllReservationsBaseView(id);
+        return reservationRepository.findAllReservationsBaseView(clientId);
     }
 }

@@ -8,10 +8,12 @@ import pl.myproject.car_rental_api.dto.rent.AddRentDTO;
 import pl.myproject.car_rental_api.dto.rent.RentDTO;
 import pl.myproject.car_rental_api.dto.rent.UpdateRentDTO;
 import pl.myproject.car_rental_api.entity.Rent;
+import pl.myproject.car_rental_api.projection.ClientRentBaseView;
 import pl.myproject.car_rental_api.repository.RentRepository;
 import pl.myproject.car_rental_api.service.RentService;
 import pl.myproject.car_rental_api.service.ReservationService;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -52,5 +54,10 @@ public class RentServiceImpl implements RentService {
         rent.setStatus(updateRentDTO.getStatus());
 
         return modelMapper.map(rent, RentDTO.class);
+    }
+
+    @Override
+    public List<ClientRentBaseView> getRentsByClientId(long clientId) {
+        return rentRepository.findAllRentsBaseView(clientId);
     }
 }

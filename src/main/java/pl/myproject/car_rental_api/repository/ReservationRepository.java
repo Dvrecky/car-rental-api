@@ -51,7 +51,7 @@ public interface ReservationRepository extends JpaRepository <Reservation, Long>
             FROM Reservation r
             JOIN r.car c
             JOIN c.model m
-            WHERE r.user.id = :userId
+            WHERE r.user.id = :clientId
             """)
-    List<ClientReservationBaseView> findAllReservationsBaseView(long userId);
+    List<ClientReservationBaseView> findAllReservationsBaseView(long clientId);
 }
