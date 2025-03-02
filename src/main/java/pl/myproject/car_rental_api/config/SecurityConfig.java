@@ -37,6 +37,18 @@ public class SecurityConfig {
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/cars/*/overview")).permitAll()
                 .requestMatchers("/api/cars/base-info").permitAll()
 
+                .requestMatchers("/api/reservations/client/**").hasAnyRole("CLIENT", "EMPLOYEE")
+                .requestMatchers(HttpMethod.POST, "/api/reservations").hasRole("CLIENT")
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/reservations/*/period")).hasRole("CLIENT")
+                .requestMatchers(AntPathRequestMatcher.antMatcher("/api/reservations/*/cancel")).hasAnyRole("CLIENT", "EMPLOYEE")
+
+                .requestMatchers(HttpMethod.GET, "/api/rents").hasAnyRole("EMPLOYEE", "ADMIN")
+                .requestMatchers(HttpMethod.POST, "/api/rents").hasRole("EMPLOYEE")
+                .requestMatchers(HttpMethod.GET,"/api/rents/client/**").hasAnyRole("CLIENT", "EMPLOYEE")
+                .requestMatchers(HttpMethod.PATCH,"/api/rents/**").hasRole("EMPLOYEE")
+
+                .requestMatchers("/api/car-availability/**").hasAnyRole("CLIENT", "EMPLOYEE")
+
         );
 
 

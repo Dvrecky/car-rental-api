@@ -47,7 +47,7 @@ public class ReservationController {
         return ResponseEntity.ok(canceledReservationDTO);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/client/{id}")
     public ResponseEntity<List<ClientReservationBaseView>> getReservationsByClientId(@PathVariable("id") long clientId) {
         return ResponseEntity.status(HttpStatus.OK)
                 .body(reservationService.getReservationsByClientId(clientId));

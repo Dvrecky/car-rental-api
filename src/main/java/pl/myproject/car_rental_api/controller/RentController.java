@@ -40,7 +40,7 @@ public class RentController {
         return ResponseEntity.ok(updatedRentDTO);
     }
 
-    @GetMapping("/user/{id}")
+    @GetMapping("/client/{id}")
     public ResponseEntity<List<ClientRentBaseView>> getReservationsByClientId(@PathVariable("id") long clientId) {
         return ResponseEntity
                 .status(HttpStatus.OK)
