@@ -57,6 +57,7 @@ public class SecurityConfig {
 
                 .requestMatchers(HttpMethod.POST, "/api/clients/login").permitAll()
 
+                .requestMatchers(HttpMethod.POST, "/api/employees/login").permitAll()
         );
 
         http.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class);
