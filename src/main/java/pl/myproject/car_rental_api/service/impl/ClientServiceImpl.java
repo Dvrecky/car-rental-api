@@ -84,8 +84,8 @@ public class ClientServiceImpl implements ClientService {
 
                 jwt = Jwts.builder()
                         .issuer("Car Rental")
-                        .subject("User: " + authenticationResponse.getName())
-                        .claim("Email", authenticationResponse.getName())
+                        .subject("user: " + authenticationResponse.getName())
+                        .claim("email", authenticationResponse.getName())
                         .claim("authorities", authenticationResponse.getAuthorities()
                                 .stream()
                                 .map(GrantedAuthority::getAuthority)

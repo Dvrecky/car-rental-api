@@ -14,7 +14,9 @@ import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import pl.myproject.car_rental_api.filter.JWTTokenValidatorFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
 
@@ -53,9 +55,11 @@ public class SecurityConfig {
 
                 .requestMatchers(HttpMethod.POST, "/api/employees").hasRole("ADMIN")
 
+                .requestMatchers(HttpMethod.POST, "/api/clients/login").permitAll()
+
         );
 
-
+        http.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class);
 
         // disabling formLogin
         http.formLogin(AbstractHttpConfigurer::disable);
