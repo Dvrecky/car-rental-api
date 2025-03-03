@@ -26,7 +26,7 @@ public class JWTTokenValidatorFilter extends OncePerRequestFilter {
 
         String passedToken = request.getHeader(ApplicationConstants.JWT_HEADER);
 
-        if (passedToken != null) {
+        if (passedToken != null && !passedToken.startsWith("Basic ")) {
 
             try {
                 Environment env = getEnvironment();

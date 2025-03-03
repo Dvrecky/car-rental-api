@@ -16,6 +16,7 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.password.HaveIBeenPwnedRestApiPasswordChecker;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import pl.myproject.car_rental_api.filter.JWTTokenGeneratorFilter;
 import pl.myproject.car_rental_api.filter.JWTTokenValidatorFilter;
 
 import static org.springframework.security.config.Customizer.withDefaults;
@@ -28,7 +29,7 @@ public class SecurityConfig {
 
         // backend won't maintain user session, backend will be stateless
         http.sessionManagement( sessionConfigurer -> sessionConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-        // securing endpoint
+        // securing endpoints
         .authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/api/cars/list-view").hasAnyRole("EMPLOYEE", "ADMIN")
                 .requestMatchers(AntPathRequestMatcher.antMatcher("/api/cars/*/details")).hasAnyRole("EMPLOYEE", "ADMIN")
@@ -55,19 +56,18 @@ public class SecurityConfig {
 
                 .requestMatchers(HttpMethod.POST, "/api/employees").hasRole("ADMIN")
 
-                .requestMatchers(HttpMethod.POST, "/api/clients/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/clients/login", "/api/employees/login").permitAll()
 
-                .requestMatchers(HttpMethod.POST, "/api/employees/login").permitAll()
         );
 
-        http.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class);
+        http.addFilterBefore(new JWTTokenValidatorFilter(), BasicAuthenticationFilter.class)
+                .addFilterAfter(new JWTTokenGeneratorFilter(), BasicAuthenticationFilter.class);
 
         // disabling formLogin
         http.formLogin(AbstractHttpConfigurer::disable);
         // disabling cors and csrf
         http.cors(AbstractHttpConfigurer::disable);
-//        http.csrf(AbstractHttpConfigurer::disable);
-        http.csrf(csrgConf -> csrgConf.disable());
+        http.csrf(AbstractHttpConfigurer::disable);
         http.httpBasic(withDefaults());
         return http.build();
     }
