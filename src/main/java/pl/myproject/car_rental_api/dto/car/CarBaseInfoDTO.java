@@ -17,7 +17,7 @@ import java.math.BigDecimal;
 //    private String gearboxType;
 //}
 
-public record CarBaseInfoDTO(int id, int rentalPricePerDay, String fullName, String typeOfDrive,
+public record CarBaseInfoDTO(int id, String fullName, String typeOfDrive,
                              BigDecimal accelerationTime, BigDecimal capacity, int horsepower, int torque,
                              String cylinderConfiguration, String gearboxType)
 {}

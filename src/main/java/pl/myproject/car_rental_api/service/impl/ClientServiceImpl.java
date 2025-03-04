@@ -22,6 +22,7 @@ import pl.myproject.car_rental_api.entity.Role;
 import pl.myproject.car_rental_api.entity.User;
 import pl.myproject.car_rental_api.enums.UserRole;
 import pl.myproject.car_rental_api.exception.RoleNotFoundException;
+import pl.myproject.car_rental_api.exception.UserNotFoundException;
 import pl.myproject.car_rental_api.repository.RoleRepository;
 import pl.myproject.car_rental_api.repository.UserRepository;
 import pl.myproject.car_rental_api.service.ClientService;
@@ -98,5 +99,11 @@ public class ClientServiceImpl implements ClientService {
         }
 
         return new LoginResponse(HttpStatus.OK.getReasonPhrase(), jwt);
+    }
+
+    @Override
+    public User getUserById(long id) {
+        return userRepository.findById(id)
+                .orElseThrow( () -> new UserNotFoundException("User with ID: " + id + " not found"));
     }
 }

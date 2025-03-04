@@ -87,8 +87,6 @@ public class CarRepositoryTest {
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
                 .mileage(50000)
                 .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
-                .rentalPricePerDay(100)
-                .basePrice(25000)
                 .model(model)
                 .build();
 
@@ -229,8 +227,6 @@ public class CarRepositoryTest {
                 .lastServiceDate(LocalDate.of(2024, 11, 15))
                 .mileage(20000) // było 18000
                 .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
-                .rentalPricePerDay(150)
-                .basePrice(35000)
                 .model(model)
                 .build();
 

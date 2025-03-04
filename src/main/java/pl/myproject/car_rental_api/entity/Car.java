@@ -51,12 +51,6 @@ public class Car {
     @Column(name = "insurance_expiry_date")
     private LocalDate insuranceExpiryDate;
 
-    @Column(name = "rental_price_per_day")
-    private int rentalPricePerDay;
-
-    @Column(name = "base_price")
-    private int basePrice;
-
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "model_id")
     private Model model;
@@ -65,8 +59,6 @@ public class Car {
     private CarCondition carCondition;
 
     public Car(int basePrice, int rentalPricePerDay, LocalDate insuranceExpiryDate, int mileage, LocalDate lastServiceDate, String registrationNumber) {
-        this.basePrice = basePrice;
-        this.rentalPricePerDay = rentalPricePerDay;
         this.insuranceExpiryDate = insuranceExpiryDate;
         this.mileage = mileage;
         this.lastServiceDate = lastServiceDate;
@@ -79,8 +71,6 @@ public class Car {
         this.lastServiceDate = lastServiceDate;
         this.mileage = mileage;
         this.insuranceExpiryDate = insuranceExpiryDate;
-        this.rentalPricePerDay = rentalPricePerDay;
-        this.basePrice = basePrice;
     }
 
     public void setCarCondition(CarCondition carCondition) {
@@ -96,8 +86,6 @@ public class Car {
                 ", lastServiceDate=" + lastServiceDate +
                 ", mileage=" + mileage +
                 ", insuranceExpiryDate=" + insuranceExpiryDate +
-                ", rentalPricePerDay=" + rentalPricePerDay +
-                ", basePrice=" + basePrice +
                 '}';
     }
 

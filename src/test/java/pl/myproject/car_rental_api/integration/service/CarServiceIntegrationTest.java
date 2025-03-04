@@ -75,8 +75,6 @@ public class CarServiceIntegrationTest {
                 .lastServiceDate(LocalDate.of(2023, 6, 15))
                 .mileage(50000)
                 .insuranceExpiryDate(LocalDate.of(2025, 12, 31))
-                .rentalPricePerDay(100)
-                .basePrice(25000)
                 .model(modelDTO)
                 .build();
 

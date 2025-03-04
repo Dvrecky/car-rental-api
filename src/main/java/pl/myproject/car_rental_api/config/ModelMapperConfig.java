@@ -1,6 +1,7 @@
 package pl.myproject.car_rental_api.config;
 
 import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -29,8 +30,10 @@ public class ModelMapperConfig {
 
         modelMapper.getConfiguration().setFieldMatchingEnabled(true).setFieldAccessLevel(org.modelmapper.config.Configuration.AccessLevel.PRIVATE);
 
-        modelMapper.typeMap(Reservation.class, ReservationDTO.class).addMappings(mapper -> {
-            mapper.map(src -> src.getCar(), ReservationDTO::setCarDTO);
+        TypeMap<Reservation, ReservationDTO> propertyMapper = modelMapper.createTypeMap(Reservation.class, ReservationDTO.class);
+        propertyMapper.addMappings(mapper -> {
+            mapper.map(src -> src.getCar().getId(), ReservationDTO::setCarId);
+            mapper.map(src -> src.getUser().getId(), ReservationDTO::setUserId);
         });
 
         return modelMapper;

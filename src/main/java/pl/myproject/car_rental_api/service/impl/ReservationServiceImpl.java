@@ -10,13 +10,16 @@ import pl.myproject.car_rental_api.dto.reservation.UpdateReservationDateDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.CarAvailability;
 import pl.myproject.car_rental_api.entity.Reservation;
+import pl.myproject.car_rental_api.entity.User;
 import pl.myproject.car_rental_api.projection.ClientReservationBaseView;
 import pl.myproject.car_rental_api.repository.ReservationRepository;
 import pl.myproject.car_rental_api.service.CarAvailabilityService;
 import pl.myproject.car_rental_api.service.CarService;
+import pl.myproject.car_rental_api.service.ClientService;
 import pl.myproject.car_rental_api.service.ReservationService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -29,16 +32,19 @@ public class ReservationServiceImpl implements ReservationService {
     private final ReservationRepository reservationRepository;
     private final ModelMapper defaultModelMapper;
     private final ModelMapper toReservationDTOModelMapper;
+    private final ClientService clientService;
 
-    public ReservationServiceImpl(CarAvailabilityService carAvailabilityService, ReservationRepository reservationRepository, @Qualifier("defaultModelMapper") ModelMapper defaultModelMapper, CarService carService, @Qualifier("toReservationDTOModelMapper") ModelMapper toReservationDTOModelMapper) {
+    public ReservationServiceImpl(CarAvailabilityService carAvailabilityService, ReservationRepository reservationRepository, @Qualifier("defaultModelMapper") ModelMapper defaultModelMapper, CarService carService, @Qualifier("toReservationDTOModelMapper") ModelMapper toReservationDTOModelMapper, ClientService clientService) {
         this.carAvailabilityService = carAvailabilityService;
         this.reservationRepository = reservationRepository;
         this.defaultModelMapper = defaultModelMapper;
         this.carService = carService;
         this.toReservationDTOModelMapper = toReservationDTOModelMapper;
+        this.clientService = clientService;
     }
 
     @Override
+    @Transactional
     public ReservationDTO addReservation(AddReservationDTO addReservationDTO) {
 
         // checking if car is available for given period
@@ -49,12 +55,17 @@ public class ReservationServiceImpl implements ReservationService {
         // checking if given car is available for given period
         CarAvailability carAvailability = carAvailabilityService.isCarAvailable(startDate, endDate, carId);
 
-        // mapping
-        Reservation reservation = defaultModelMapper.map(addReservationDTO, Reservation.class);
-
         // getting car by id for given reservation
         Car car = carService.getCarWithDetailsById(carId);
+
+        User user = clientService.getUserById(addReservationDTO.getUserId());
+
+        // mapping
+        Reservation reservation = defaultModelMapper.map(addReservationDTO, Reservation.class);
+        reservation.setStatus("CONFIRMED");
+        reservation.setBookingDate(LocalDateTime.now());
         reservation.setCar(car);
+        reservation.setUser(user);
 
         // changing availability for reservation period
         carAvailabilityService.changeCarAvailability(carAvailability, startDate, endDate, car);

@@ -21,5 +21,6 @@ public class ReservationDTO {
     private String paymentMethod;
     private String status;
     private String remarks;
-    private CarDetailsDTO carDTO;
+    private int carId;
+    private long userId;
 }

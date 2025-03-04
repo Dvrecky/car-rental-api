@@ -49,7 +49,6 @@ public interface CarRepository extends JpaRepository <Car, Integer> {
             SELECT
                 new pl.myproject.car_rental_api.dto.car.CarBaseInfoDTO(
                     c.id,
-                    c.rentalPricePerDay,
                     concat(m.brand, ' ', m.name),
                     m.typeOfDrive,
                     m.accelerationTime,
@@ -70,7 +69,6 @@ public interface CarRepository extends JpaRepository <Car, Integer> {
             SELECT
                 new pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO(
                     c.id,
-                    c.rentalPricePerDay,
                     new pl.myproject.car_rental_api.dto.model.ModelSummaryInfoDTO(
                         m.name,
                         m.type,

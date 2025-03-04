@@ -13,12 +13,11 @@ import java.time.LocalDateTime;
 public class AddReservationDTO {
 
     private long id;
-    private LocalDateTime bookingDate;
     private LocalDateTime startDate;
     private LocalDateTime endDate;
     private int totalPrice;
     private String paymentMethod;
-    private String status;
     private String remarks;
     private int carId;
+    private long userId;
 }

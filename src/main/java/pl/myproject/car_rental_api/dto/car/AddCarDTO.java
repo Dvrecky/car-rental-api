@@ -36,15 +36,6 @@ public class AddCarDTO {
     @Future(message = "insurance expiry date must be in future")
     private int insuranceExpiryDate;
 
-    @NotNull(message = "rental price per day can't be empty")
-    @Min(0)
-    @Max(30000)
-    private int rentalPricePerDay;
-
-    @NotNull(message = "base price can't be empty")
-    @Min(0)
-    private int basePrice;
-
     @Valid
     private AddModelDTO modelDTO;
 }
