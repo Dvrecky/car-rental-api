@@ -93,7 +93,7 @@ public class CarAvailabilityRepositoryTest {
         // updating end date with new date
         int carAvailabilityId = 1;
         LocalDate newEndDate = LocalDate.of(2025, 01,14);
-        carAvailabilityRepository.updateEndDate(newEndDate, carAvailabilityId);
+        carAvailabilityRepository.updateEndDate(carAvailabilityId, newEndDate);
 
         long carId = 1;
         List<CarAvailability> carAvailabilities = carAvailabilityRepository.findAllByCarId(carId);

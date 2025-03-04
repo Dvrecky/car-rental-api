@@ -1,5 +1,6 @@
 package pl.myproject.car_rental_api.service.impl;
 
+import jakarta.transaction.Transactional;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -37,6 +38,7 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public CarDetailsDTO saveCar(CarDetailsDTO carDTO) {
         Car car = modelMapper.map(carDTO, Car.class);
 
@@ -85,11 +87,13 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    @Transactional
     public void deleteCarById(int id) {
         carRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public CarDetailsDTO updateCar(CarDetailsDTO carDTO) {
 
         Car car = modelMapper.map(carDTO, Car.class);

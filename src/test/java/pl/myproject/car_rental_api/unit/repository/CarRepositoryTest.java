@@ -9,7 +9,6 @@ import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
 import pl.myproject.car_rental_api.entity.Model;
-import pl.myproject.car_rental_api.projection.CarBaseInfoProjection;
 import pl.myproject.car_rental_api.repository.CarRepository;
 
 import java.math.BigDecimal;

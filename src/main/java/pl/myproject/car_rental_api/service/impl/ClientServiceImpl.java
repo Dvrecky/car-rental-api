@@ -97,7 +97,6 @@ public class ClientServiceImpl implements ClientService {
                         .compact();
             }
         }
-
         return new LoginResponse(HttpStatus.OK.getReasonPhrase(), jwt);
     }
 

@@ -63,19 +63,19 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
         } else if(reservationStartDate.isEqual(carAvailability.getStartDate())) {
 
-            carAvailabilityRepository.updateEndDateAndStatus(reservationEndDate, availabilityId, "RESERVED");
+            carAvailabilityRepository.updateEndDateAndStatus(availabilityId, reservationEndDate, "RESERVED");
 
             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", reservationEndDate.plusDays(1), carAvailability.getEndDate(), car));
 
         } else if (reservationEndDate.isEqual(carAvailability.getEndDate())) {
 
-            carAvailabilityRepository.updateStartDateAndStatus(reservationStartDate, availabilityId, "RESERVED");
+            carAvailabilityRepository.updateStartDateAndStatus(availabilityId, reservationStartDate, "RESERVED");
 
             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), reservationStartDate.minusDays(1), car));
 
         } else {
             LocalDate newEndDate = reservationStartDate.minusDays(1);
-            carAvailabilityRepository.updateEndDate(newEndDate, availabilityId);
+            carAvailabilityRepository.updateEndDate(availabilityId, newEndDate);
 
             carAvailabilityRepository.save(new CarAvailability("RESERVED", reservationStartDate, reservationEndDate, car));
 
@@ -123,13 +123,13 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                 // if new reservation period is between old reservation period
 
                 // updating end date for car availability
-                carAvailabilityRepository.updateEndDate(newEndDate, carAvailability.getId());
+                carAvailabilityRepository.updateEndDate( carAvailability.getId(), newEndDate);
 
                 Optional<CarAvailability> carAvailability1 = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1), "AVAILABLE");
 
                 if(carAvailability1.isPresent()) {
 
-                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability1.get().getId());
+                    carAvailabilityRepository.updateStartDate(carAvailability1.get().getId(), newEndDate.plusDays(1));
 
                 } else {
 
@@ -139,12 +139,12 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
             } else if(endDate.isEqual(newEndDate)){ // if new reservation end date is the same
 
                 // updating start date for car availability
-                carAvailabilityRepository.updateStartDate(newStartDate, carAvailability.getId());
+                carAvailabilityRepository.updateStartDate(carAvailability.getId(), newStartDate);
 
                 Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
 
                 if(carAvailabilityOptional.isPresent()) {
-                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityOptional.get().getId());
+                    carAvailabilityRepository.updateEndDate(carAvailabilityOptional.get().getId(), newStartDate.minusDays(1));
                 } else {
                     carAvailabilityRepository.save(new CarAvailability("AVAILABLE", startDate, newStartDate.minusDays(1), carAvailability.getCar()));
                 }
@@ -157,7 +157,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                 Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
 
                 if(carAvailabilityOptional.isPresent()) {
-                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityOptional.get().getId());
+                    carAvailabilityRepository.updateEndDate(carAvailabilityOptional.get().getId(), newStartDate.minusDays(1));
                 } else {
                     carAvailabilityRepository.save(new CarAvailability("AVAILABLE", startDate, newStartDate.minusDays(1), carAvailability.getCar()));
                 }
@@ -165,7 +165,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                 Optional<CarAvailability> carAvailabilityOptional1 = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1) , "AVAILABLE");
 
                 if(carAvailabilityOptional1.isPresent()) {
-                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilityOptional1.get().getId());
+                    carAvailabilityRepository.updateStartDate(carAvailabilityOptional1.get().getId(), newEndDate.plusDays(1));
                 } else {
                     carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), endDate, carAvailability.getCar()));
                 }
@@ -189,13 +189,13 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
             if (carAvailabilityBefore.getStartDate().isEqual(newStartDate)) {
                 carAvailabilityRepository.deleteById(carAvailabilityBefore.getId());
             } else {
-                carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityBefore.getId());
+                carAvailabilityRepository.updateEndDate(carAvailabilityBefore.getId(), newStartDate.minusDays(1));
             }
 
             if (carAvailabilityAfter.getEndDate().isEqual(newEndDate)) {
                 carAvailabilityRepository.deleteById(carAvailabilityAfter.getId());
             } else {
-                carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilityAfter.getId());
+                carAvailabilityRepository.updateStartDate(carAvailabilityAfter.getId(), newEndDate.plusDays(1));
             }
 
         }
@@ -220,7 +220,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
                     // if new reservation period is included in car availability right after current reservation period
                     if(carAvailability.getId() == carAvAfter.getId()) {
-                        carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvBefore.getId());
+                        carAvailabilityRepository.updateEndDate(carAvBefore.getId(), newStartDate.minusDays(1));
                         carAvailabilityRepository.deleteById(currentCarAvailability.getId());
                         carAvailabilityRepository.changePeriodAndStatus(carAvAfter.getId(), newStartDate, newEndDate, "RESERVED");
 
@@ -228,14 +228,14 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
                             Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByStartDate(carId, carAvAfter.getEndDate().plusDays(1), "AVAILABLE");
                             if(carAvailabilityOptional.isPresent()) {
-                                carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilityOptional.get().getId());
+                                carAvailabilityRepository.updateStartDate(carAvailabilityOptional.get().getId(), newEndDate.plusDays(1));
                             } else {
                                 carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvAfter.getEndDate(), carAvailability.getCar()));
                             }
                         }
                     } else {
 
-                        carAvailabilityRepository.updateEndDate(carAvAfter.getEndDate(), carAvBefore.getId());
+                        carAvailabilityRepository.updateEndDate(carAvBefore.getId(), carAvAfter.getEndDate());
                         carAvailabilityRepository.deleteById(currentCarAvailability.getId());
                         carAvailabilityRepository.deleteById(carAvAfter.getId());
 
@@ -243,10 +243,10 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
                             carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
                         } else if(newStartDate.isEqual(carAvailability.getStartDate())) {
-                            carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                         } else if(newEndDate.isEqual(carAvailability.getEndDate())) {
-                            carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                         } else {
 
@@ -259,17 +259,17 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
                     CarAvailability carAvBefore = optionalCarAvailabilityBefore.get();
 
-                    carAvailabilityRepository.updateEndDate(endDate, carAvBefore.getId());
+                    carAvailabilityRepository.updateEndDate(carAvBefore.getId(), endDate);
                     carAvailabilityRepository.deleteById(currentCarAvailability.getId());
 
                     if(newStartDate.isEqual(carAvailability.getStartDate()) && newEndDate.isEqual(carAvailability.getEndDate())) {
 
                         carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
                     } else if(newStartDate.isEqual(carAvailability.getStartDate())) {
-                        carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                     } else if(newEndDate.isEqual(carAvailability.getEndDate())) {
-                        carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate,"RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                     } else {
 
@@ -286,7 +286,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
                     if(carAvailability.getId() == carAvAfter.getId()) {
 
-                        carAvailabilityRepository.updateEndDateAndStatus(newStartDate.minusDays(1), currentCarAvailability.getId(), "AVAILABLE");
+                        carAvailabilityRepository.updateEndDateAndStatus(currentCarAvailability.getId(), newStartDate.minusDays(1), "AVAILABLE");
                         carAvailabilityRepository.changePeriodAndStatus(carAvAfter.getId(), newStartDate, newEndDate, "RESERVED");
 
                         if(!newEndDate.isEqual(carAvAfter.getEndDate())) {
@@ -295,17 +295,17 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     }
                    else {
 
-                        carAvailabilityRepository.updateStartDate(currentCarAvailability.getStartDate(), carAvAfter.getId());
+                        carAvailabilityRepository.updateStartDate( carAvAfter.getId(), currentCarAvailability.getStartDate());
                         carAvailabilityRepository.deleteById(currentCarAvailability.getId());
 
                         if(newStartDate.isEqual(carAvailability.getStartDate()) && newEndDate.isEqual(carAvailability.getEndDate())) {
 
                             carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
                         } else if(newStartDate.isEqual(carAvailability.getStartDate())) {
-                            carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                         } else if(newEndDate.isEqual(carAvailability.getEndDate())) {
-                            carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                         } else {
 
@@ -321,10 +321,10 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     if(carAvailability.getStartDate().isEqual(newStartDate) && carAvailability.getEndDate().isEqual(newEndDate)) {
                         carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
                     } else if (carAvailability.getStartDate().isEqual(newStartDate)) {
-                        carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                     } else if (carAvailability.getEndDate().isEqual(newEndDate)) {
-                        carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate, "RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                     } else {
                         carAvailabilityRepository.changePeriodAndStatus(carAvailability.getId(), newStartDate, newEndDate, "RESERVED");
@@ -342,7 +342,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
                     // if new reservation period is included in car availability right after current reservation period
                     if(carAvailability.getId() == carAvBefore.getId()) {
-                        carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvAfter.getId());
+                        carAvailabilityRepository.updateStartDate(carAvAfter.getId(), newEndDate.plusDays(1));
                         carAvailabilityRepository.deleteById(currentCarAvailability.getId());
 
                         carAvailabilityRepository.changePeriodAndStatus(carAvBefore.getId(), newStartDate, newEndDate, "RESERVED");
@@ -354,7 +354,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     } else {
 
                         // making car available for old reservation period
-                        carAvailabilityRepository.updateEndDate(carAvAfter.getEndDate(), carAvBefore.getId());
+                        carAvailabilityRepository.updateEndDate(carAvBefore.getId(), carAvAfter.getEndDate());
                         carAvailabilityRepository.deleteById(currentCarAvailability.getId());
                         carAvailabilityRepository.deleteById(carAvAfter.getId());
 
@@ -363,10 +363,10 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                             carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
 
                         } else if(newStartDate.isEqual(carAvailability.getStartDate())) {
-                            carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                         } else if(newEndDate.isEqual(carAvailability.getEndDate())) {
-                            carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                         } else {
 
@@ -383,7 +383,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     // if new reservation period is included in car availability right after current reservation period
                     if(carAvailability.getId() == carAvBefore.getId()) {
 
-                        carAvailabilityRepository.updateStartDateAndStatus(newEndDate.plusDays(1), currentCarAvailability.getId(), "AVAILABLE");
+                        carAvailabilityRepository.updateStartDateAndStatus(currentCarAvailability.getId(), newEndDate.plusDays(1), "AVAILABLE");
                         carAvailabilityRepository.changePeriodAndStatus(carAvBefore.getId(), newStartDate, newEndDate, "RESERVED");
 
                         if(!newStartDate.isEqual(carAvBefore.getStartDate())) {
@@ -393,7 +393,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     } else {
 
                         // making car available for old reservation period
-                        carAvailabilityRepository.updateEndDate(currentCarAvailability.getEndDate(), carAvBefore.getId());
+                        carAvailabilityRepository.updateEndDate(carAvBefore.getId(), currentCarAvailability.getEndDate());
                         carAvailabilityRepository.deleteById(currentCarAvailability.getId());
 
                         if(newStartDate.isEqual(carAvailability.getStartDate()) && newEndDate.isEqual(carAvailability.getEndDate())) {
@@ -401,10 +401,10 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                             carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
 
                         } else if(newStartDate.isEqual(carAvailability.getStartDate())) {
-                            carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                         } else if(newEndDate.isEqual(carAvailability.getEndDate())) {
-                            carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                            carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate, "RESERVED");
                             carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                         } else {
 
@@ -417,16 +417,16 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
 
                     CarAvailability carAvAfter = optionalCarAvailabilityAfter.get();
 
-                    carAvailabilityRepository.updateStartDate(currentCarAvailability.getStartDate(), carAvAfter.getId());
+                    carAvailabilityRepository.updateStartDate(carAvAfter.getId(), currentCarAvailability.getStartDate());
                     carAvailabilityRepository.deleteById(currentCarAvailability.getId());
 
                     if(newStartDate.isEqual(carAvailability.getStartDate()) && newEndDate.isEqual(carAvailability.getEndDate())) {
                         carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
                     } else if(newStartDate.isEqual(carAvailability.getStartDate())) {
-                        carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                     } else if(newEndDate.isEqual(carAvailability.getEndDate())) {
-                        carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate, "RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                     } else {
 
@@ -442,10 +442,10 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     if(carAvailability.getStartDate().isEqual(newStartDate) && carAvailability.getEndDate().isEqual(newEndDate)) {
                         carAvailabilityRepository.updateStatus(carAvailability.getId(), "RESERVED");
                     } else if (carAvailability.getStartDate().isEqual(newStartDate)) {
-                        carAvailabilityRepository.updateEndDateAndStatus(newEndDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateEndDateAndStatus(carAvailability.getId(), newEndDate, "RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), carAvailability.getEndDate(), carAvailability.getCar()));
                     } else if (carAvailability.getEndDate().isEqual(newEndDate)) {
-                        carAvailabilityRepository.updateStartDateAndStatus(newStartDate, carAvailability.getId(), "RESERVED");
+                        carAvailabilityRepository.updateStartDateAndStatus(carAvailability.getId(), newStartDate, "RESERVED");
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", carAvailability.getStartDate(), newStartDate.minusDays(1), carAvailability.getCar()));
                     } else {
                         carAvailabilityRepository.changePeriodAndStatus(carAvailability.getId(), newStartDate, newEndDate, "RESERVED");
@@ -466,7 +466,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                 Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
 
                 if(carAvailabilityOptional.isPresent()) {
-                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityOptional.get().getId());
+                    carAvailabilityRepository.updateEndDate(carAvailabilityOptional.get().getId(), newStartDate.minusDays(1));
                 } else {
                     carAvailabilityRepository.save(new CarAvailability("AVAILABLE", startDate, newStartDate.minusDays(1), carAvailability.getCar()));
                 }
@@ -474,7 +474,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                 if(carAvailability.getEndDate().isEqual(newEndDate)){
                     carAvailabilityRepository.deleteById(carAvailability.getId());
                 } else {
-                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability.getId());
+                    carAvailabilityRepository.updateStartDate(carAvailability.getId(), newEndDate.plusDays(1));
                 }
 
             } else if (newEndDate.isEqual(startDate)) {
@@ -484,7 +484,7 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                 Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1), "AVAILABLE");
 
                 if(carAvailabilityOptional.isPresent()) {
-                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilityOptional.get().getId());
+                    carAvailabilityRepository.updateStartDate(carAvailabilityOptional.get().getId(), newEndDate.plusDays(1));
                 } else {
                     carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), endDate, carAvailability.getCar()));
                 }
@@ -492,26 +492,26 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                 if(carAvailability.getStartDate().isEqual(newStartDate)) {
                     carAvailabilityRepository.deleteById(carAvailability.getId());
                 } else {
-                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailability.getId());
+                    carAvailabilityRepository.updateEndDate(carAvailability.getId(), newStartDate.minusDays(1));
                 }
             } else if(startDate.isEqual(newStartDate)){
 
-                carAvailabilityRepository.updateEndDate(newEndDate, currentCarAvailability.getId());
+                carAvailabilityRepository.updateEndDate(currentCarAvailability.getId(), newEndDate);
 
                 if(carAvailability.getEndDate().isEqual(newEndDate)) {
                     carAvailabilityRepository.deleteById(carAvailability.getId());
                 } else {
-                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability.getId());
+                    carAvailabilityRepository.updateStartDate(carAvailability.getId(), newEndDate.plusDays(1));
                 }
             } else if(endDate.isEqual(newEndDate)){
 
-                carAvailabilityRepository.updateStartDate(newStartDate, currentCarAvailability.getId());
+                carAvailabilityRepository.updateStartDate(currentCarAvailability.getId(), newStartDate);
 
                 if(carAvailability.getStartDate().isEqual(newStartDate))
                 {
                     carAvailabilityRepository.deleteById(carAvailability.getId());
                 } else {
-                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailability.getId());
+                    carAvailabilityRepository.updateEndDate(carAvailability.getId(), newStartDate.minusDays(1));
                 }
 
             } else{
@@ -523,12 +523,12 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByEndDate(carId, startDate.minusDays(1), "AVAILABLE");
 
                     if(carAvailabilityOptional.isPresent()) {
-                        carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailabilityOptional.get().getId());
+                        carAvailabilityRepository.updateEndDate(carAvailabilityOptional.get().getId(), newStartDate.minusDays(1));
                     } else {
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", startDate, newStartDate.minusDays(1), carAvailability.getCar()));
                     }
 
-                    carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailability.getId());
+                    carAvailabilityRepository.updateStartDate(carAvailability.getId(), newEndDate.plusDays(1));
                 } else {
 
                     carAvailabilityRepository.changePeriod(currentCarAvailability.getId(), newStartDate, newEndDate);
@@ -536,12 +536,12 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
                     Optional<CarAvailability> carAvailabilityOptional = carAvailabilityRepository.checkStatusByStartDate(carId, endDate.plusDays(1), "AVAILABLE");
 
                     if(carAvailabilityOptional.isPresent()) {
-                        carAvailabilityRepository.updateStartDate(newEndDate.plusDays(1), carAvailabilityOptional.get().getId());
+                        carAvailabilityRepository.updateStartDate(carAvailabilityOptional.get().getId(), newEndDate.plusDays(1));
                     } else {
                         carAvailabilityRepository.save(new CarAvailability("AVAILABLE", newEndDate.plusDays(1), endDate, carAvailability.getCar()));
                     }
 
-                    carAvailabilityRepository.updateEndDate(newStartDate.minusDays(1), carAvailability.getId());
+                    carAvailabilityRepository.updateEndDate(carAvailability.getId(), newStartDate.minusDays(1));
                 }
             }
         }
@@ -562,18 +562,18 @@ public class CarAvailabilityServiceImpl implements CarAvailabilityService {
             CarAvailability carAvBefore = optionalBeforeCarAv.get();
             CarAvailability carAvAfter = optionalAfterCarAv.get();
 
-            carAvailabilityRepository.updateStartDate(carAvBefore.getStartDate(), carAvAfter.getId());
+            carAvailabilityRepository.updateStartDate(carAvAfter.getId(), carAvBefore.getStartDate());
             carAvailabilityRepository.deleteById(carAvCurrent.getId());
             carAvailabilityRepository.deleteById(carAvBefore.getId());
         } else if (optionalAfterCarAv.isPresent()) {
             CarAvailability carAvAfter = optionalAfterCarAv.get();
 
-            carAvailabilityRepository.updateStartDate(carAvCurrent.getStartDate(), carAvAfter.getId());
+            carAvailabilityRepository.updateStartDate(carAvAfter.getId(), carAvCurrent.getStartDate());
             carAvailabilityRepository.deleteById(carAvCurrent.getId());
         } else if (optionalBeforeCarAv.isPresent()) {
             CarAvailability carAvBefore = optionalBeforeCarAv.get();
 
-            carAvailabilityRepository.updateStartDateAndStatus(carAvBefore.getStartDate(), carAvCurrent.getId(), "AVAILABLE");
+            carAvailabilityRepository.updateStartDateAndStatus(carAvCurrent.getId(), carAvBefore.getStartDate(), "AVAILABLE");
             carAvailabilityRepository.deleteById(carAvBefore.getId());
         } else {
             carAvailabilityRepository.updateStatus(carAvCurrent.getId(), "AVAILABLE");

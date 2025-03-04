@@ -23,17 +23,17 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
     @Transactional
     @Modifying
     @Query("UPDATE CarAvailability SET endDate = :newEndDate WHERE id = :id")
-    void updateEndDate(@Param("newEndDate") LocalDate endDate, long id);
+    void updateEndDate(long id, @Param("newEndDate") LocalDate endDate);
 
     @Transactional
     @Modifying
     @Query("UPDATE CarAvailability SET endDate = :newEndDate, status = :newStatus WHERE id =:id")
-    void updateEndDateAndStatus(@Param("newEndDate")LocalDate endDate, long id, @Param("newStatus") String status);
+    void updateEndDateAndStatus(long id, @Param("newEndDate")LocalDate endDate, @Param("newStatus") String status);
 
     @Transactional
     @Modifying
     @Query("UPDATE CarAvailability SET startDate = :newStartDate, status = :status WHERE id=:id")
-    void updateStartDateAndStatus(@Param("newStartDate") LocalDate startDate, long id, String status);
+    void updateStartDateAndStatus( long id, @Param("newStartDate") LocalDate startDate,String status);
 
     @Transactional
     @Modifying
@@ -59,7 +59,7 @@ public interface CarAvailabilityRepository extends JpaRepository<CarAvailability
     @Transactional
     @Modifying
     @Query("UPDATE CarAvailability SET startDate = :newStartDate  WHERE id = :id")
-    void updateStartDate(@Param("newStartDate") LocalDate startDate, long id);
+    void updateStartDate(long id, @Param("newStartDate") LocalDate startDate);
 
     @Query("SELECT c FROM CarAvailability c WHERE c.car.id = :carId AND c.startDate = :startDate AND c.status = :status")
     Optional<CarAvailability> checkStatusByStartDate(long carId, LocalDate startDate, String status);

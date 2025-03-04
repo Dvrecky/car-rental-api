@@ -1,5 +1,6 @@
 package pl.myproject.car_rental_api.controller;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.http.HttpStatus;
@@ -14,15 +15,11 @@ import pl.myproject.car_rental_api.service.CarService;
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/api/cars")
 public class CarController {
 
     private final CarService carService;
-
-    @Autowired
-    public CarController(CarService carService){
-        this.carService = carService;
-    }
 
     @GetMapping("/details")
     public ResponseEntity<List<CarDetailsDTO>> getCarListWithDetails() {
