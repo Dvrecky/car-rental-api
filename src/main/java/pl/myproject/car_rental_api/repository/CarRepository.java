@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import pl.myproject.car_rental_api.dto.car.CarBaseInfoDTO;
+import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
 import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.projection.CarListViewProjection;
@@ -26,45 +26,24 @@ public interface CarRepository extends JpaRepository <Car, Integer> {
 
     Optional<Car> findCarByVin(String vin);
 
-//    @Query("""
-//            SELECT
-//                c.id as id,
-//                c.rentalPricePerDay as rentalPricePerDay,
-//                concat(m.brand, ' ', m.name) as fullName,
-//                m.typeOfDrive as typeOfDrive,
-//                m.accelerationTime as accelerationTime,
-//                e.capacity as capacity,
-//                e.horsepower as horsepower,
-//                e.torque as torque,
-//                e.cylinderConfiguration as cylinderConfiguration,
-//                g.numberOfGears as numberOfGears
-//            FROM Car c
-//            JOIN c.model m
-//            JOIN m.engine e
-//            JOIN m.gearbox g
-//            """)
-//    List<CarBaseInfoProjection> findAllCarBaseInfo();
-
-        @Query("""
-            SELECT
-                new pl.myproject.car_rental_api.dto.car.CarBaseInfoDTO(
-                    c.id,
-                    c.rentalPricePerDay,
-                    concat(m.brand, ' ', m.name),
-                    m.typeOfDrive,
-                    m.accelerationTime,
-                    e.capacity,
-                    e.horsepower,
-                    e.torque,
-                    e.cylinderConfiguration,
-                    g.type
-                )
+    @Query("""
+            SELECT new pl.myproject.car_rental_api.dto.car.CarSummaryDTO(
+                c.id,
+                c.rentalPricePerDay,
+                m.name,
+                m.numberOfSeats,
+                m.accelerationTime,
+                m.photoUrl,
+                e.horsepower,
+                e.torque,
+                g.type as gearboxType
+            )
             FROM Car c
             JOIN c.model m
             JOIN m.engine e
             JOIN m.gearbox g
-            """)
-    List<CarBaseInfoDTO> findAllCarsBaseInfo();
+    """)
+    List<CarSummaryDTO> findAllCarsSummary();
 
     @Query("""
             SELECT

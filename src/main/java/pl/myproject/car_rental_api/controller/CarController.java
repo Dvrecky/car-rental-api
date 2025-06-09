@@ -1,37 +1,33 @@
 package pl.myproject.car_rental_api.controller;
 
-import org.springframework.beans.factory.annotation.Autowired;
-
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.myproject.car_rental_api.dto.car.CarBaseInfoDTO;
 import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
 import pl.myproject.car_rental_api.dto.car.CarListViewDTO;
+import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
 import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/cars")
+@RequestMapping(path = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequiredArgsConstructor
 public class CarController {
 
     private final CarService carService;
-
-    @Autowired
-    public CarController(CarService carService){
-        this.carService = carService;
-    }
 
     @GetMapping("/details")
     public ResponseEntity<List<CarDetailsDTO>> getCarListWithDetails() {
         return ResponseEntity.ok(carService.getAllCarsWithDetails());
     }
 
-    @GetMapping("/base-info")
-    public ResponseEntity<List<CarBaseInfoDTO>> getCarListSummary() {
-        return ResponseEntity.ok(carService.getCarsBaseView());
+    @GetMapping("/cars")
+    public ResponseEntity<List<CarSummaryDTO>> getCarsSummary() {
+        return ResponseEntity.ok(carService.getCarsSummary());
     }
 
     @GetMapping("/list-view")

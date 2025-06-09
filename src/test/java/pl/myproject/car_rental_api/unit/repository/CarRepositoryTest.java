@@ -5,11 +5,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
+import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
 import pl.myproject.car_rental_api.entity.Gearbox;
 import pl.myproject.car_rental_api.entity.Model;
-import pl.myproject.car_rental_api.projection.CarBaseInfoProjection;
 import pl.myproject.car_rental_api.repository.CarRepository;
 
 import java.math.BigDecimal;
@@ -315,13 +315,23 @@ public class CarRepositoryTest {
 
     @Test
     @Order(7)
-    @DisplayName("Test 7: Retrieving list of car base view")
-    public void getListOfBaseCarView() {
+    @DisplayName("Test 7: Retrieving cars summary")
+    public void getCarsSummary() {
 
-//        List<CarBaseInfoProjection> baseInfoProjectionList = carRepository.findAllCarBaseInfo();
-//
-//        assertThat(baseInfoProjectionList.size()).isEqualTo(3);
+        List<CarSummaryDTO> carSummaryList = this.carRepository.findAllCarsSummary();
 
+        assertThat(carSummaryList).isNotNull();
+        assertThat(carSummaryList.size()).isEqualTo(3);
+
+        // checking if car summary with given name exists
+        CarSummaryDTO carSummary = carSummaryList.stream()
+                .filter( car -> car.getName().equalsIgnoreCase("Model B"))
+                .findAny().orElse(null);
+
+        assertThat(carSummary).isNotNull();
+        assertThat(carSummary.getNumberOfSeats()).isEqualTo(7);
+
+        carSummaryList.forEach(System.out::println);
     }
 
 

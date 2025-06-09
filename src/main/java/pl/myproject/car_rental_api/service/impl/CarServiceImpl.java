@@ -4,9 +4,9 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import pl.myproject.car_rental_api.dto.car.CarBaseInfoDTO;
 import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
 import pl.myproject.car_rental_api.dto.car.CarListViewDTO;
+import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
 import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
 import pl.myproject.car_rental_api.entity.Car;
 
@@ -36,6 +36,14 @@ public class CarServiceImpl implements CarService {
                 .toList();
     }
 
+    /**
+     * @return list of car summaries for client
+     */
+    @Override
+    public List<CarSummaryDTO> getCarsSummary() {
+        return this.carRepository.findAllCarsSummary();
+    }
+
     @Override
     public CarDetailsDTO saveCar(CarDetailsDTO carDTO) {
         Car car = modelMapper.map(carDTO, Car.class);
@@ -48,17 +56,6 @@ public class CarServiceImpl implements CarService {
         Car newCar = carRepository.save(car);
 
         return modelMapper.map(newCar, CarDetailsDTO.class);
-    }
-
-    @Override
-    public List<CarBaseInfoDTO> getCarsBaseView() {
-
-        return carRepository.findAllCarsBaseInfo();
-
-//        return carRepository.findAllCarBaseInfo()
-//                .stream()
-//                .map( carInfo -> modelMapper.map(carInfo, CarBaseInfoDTO.class))
-//                .toList();
     }
 
     @Override
