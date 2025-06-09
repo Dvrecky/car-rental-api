@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
+import pl.myproject.car_rental_api.dto.car.CarAdminSummaryDTO;
 import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
 import pl.myproject.car_rental_api.entity.Car;
 import pl.myproject.car_rental_api.entity.Engine;
@@ -334,5 +335,24 @@ public class CarRepositoryTest {
         carSummaryList.forEach(System.out::println);
     }
 
+    @Test
+    @Order(8)
+    @DisplayName("Test 8: Retrieving cars summary for Admin")
+    public void getCarsSummaryForAdmin() {
 
+        List<CarAdminSummaryDTO> carsAdminSummary = this.carRepository.findAllCarsSummaryForAdmin();
+
+        assertThat(carsAdminSummary).isNotNull();
+        assertThat(carsAdminSummary.size()).isEqualTo(3);
+
+        CarAdminSummaryDTO carAdminSummary = carsAdminSummary.stream()
+                .filter( car -> car.getId() == 1)
+                .findFirst()
+                .orElse(null);
+
+        assertThat(carAdminSummary).isNotNull();
+        assertThat(carAdminSummary.getRegistrationNumber()).isEqualTo("ABC1234");
+
+        carsAdminSummary.forEach(System.out::println);
+    }
 }

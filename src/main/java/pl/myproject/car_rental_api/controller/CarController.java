@@ -5,10 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
-import pl.myproject.car_rental_api.dto.car.CarListViewDTO;
-import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
-import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
+import pl.myproject.car_rental_api.dto.car.*;
 import pl.myproject.car_rental_api.service.CarService;
 
 import java.util.List;
@@ -30,9 +27,9 @@ public class CarController {
         return ResponseEntity.ok(carService.getCarsSummary());
     }
 
-    @GetMapping("/list-view")
-    public ResponseEntity<List<CarListViewDTO>> getCarListView() {
-        return ResponseEntity.ok(carService.getCarListView());
+    @GetMapping("/admin/cars")
+    public ResponseEntity<List<CarAdminSummaryDTO>> getCarSummaryForAdmin() {
+        return ResponseEntity.ok(carService.getCarsSummaryForAdmin());
     }
 
     @GetMapping("/{id}/details")

@@ -4,10 +4,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-import pl.myproject.car_rental_api.dto.car.CarDetailsDTO;
-import pl.myproject.car_rental_api.dto.car.CarListViewDTO;
-import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
-import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
+import pl.myproject.car_rental_api.dto.car.*;
 import pl.myproject.car_rental_api.entity.Car;
 
 import pl.myproject.car_rental_api.repository.CarRepository;
@@ -44,6 +41,15 @@ public class CarServiceImpl implements CarService {
         return this.carRepository.findAllCarsSummary();
     }
 
+    /**
+     * @return list of car summaries for admin
+     */
+    @Override
+    public List<CarAdminSummaryDTO> getCarsSummaryForAdmin() {
+        return this.carRepository.findAllCarsSummaryForAdmin();
+    }
+
+
     @Override
     public CarDetailsDTO saveCar(CarDetailsDTO carDTO) {
         Car car = modelMapper.map(carDTO, Car.class);
@@ -56,14 +62,6 @@ public class CarServiceImpl implements CarService {
         Car newCar = carRepository.save(car);
 
         return modelMapper.map(newCar, CarDetailsDTO.class);
-    }
-
-    @Override
-    public List<CarListViewDTO> getCarListView() {
-        return carRepository.findAllCarsListView()
-                .stream()
-                .map( car -> modelMapper.map(car, CarListViewDTO.class))
-                .toList();
     }
 
     @Override

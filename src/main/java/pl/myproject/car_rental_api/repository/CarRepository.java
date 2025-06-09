@@ -5,10 +5,10 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
+import pl.myproject.car_rental_api.dto.car.CarAdminSummaryDTO;
 import pl.myproject.car_rental_api.dto.car.CarSummaryDTO;
 import pl.myproject.car_rental_api.dto.car.CarSummaryInfoDTO;
 import pl.myproject.car_rental_api.entity.Car;
-import pl.myproject.car_rental_api.projection.CarListViewProjection;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,24 +26,38 @@ public interface CarRepository extends JpaRepository <Car, Integer> {
 
     Optional<Car> findCarByVin(String vin);
 
-    @Query("""
-            SELECT new pl.myproject.car_rental_api.dto.car.CarSummaryDTO(
-                c.id,
-                c.rentalPricePerDay,
-                m.name,
-                m.numberOfSeats,
-                m.accelerationTime,
-                m.photoUrl,
-                e.horsepower,
-                e.torque,
-                g.type as gearboxType
-            )
-            FROM Car c
-            JOIN c.model m
-            JOIN m.engine e
-            JOIN m.gearbox g
-    """)
+    @Query(
+            """
+                SELECT new pl.myproject.car_rental_api.dto.car.CarSummaryDTO(
+                    c.id,
+                    c.rentalPricePerDay,
+                    m.name,
+                    m.numberOfSeats,
+                    m.accelerationTime,
+                    m.photoUrl,
+                    e.horsepower,
+                    e.torque,
+                    g.type as gearboxType
+                )
+                FROM Car c
+                JOIN c.model m
+                JOIN m.engine e
+                JOIN m.gearbox g
+            """
+    )
     List<CarSummaryDTO> findAllCarsSummary();
+
+    @Query(
+            """
+                SELECT new pl.myproject.car_rental_api.dto.car.CarAdminSummaryDTO(
+                    c.id,
+                    c.registrationNumber,
+                    c.vin
+                )
+                FROM Car c
+            """
+    )
+    List<CarAdminSummaryDTO> findAllCarsSummaryForAdmin();
 
     @Query("""
             SELECT
@@ -87,15 +101,4 @@ public interface CarRepository extends JpaRepository <Car, Integer> {
             WHERE c.id = :id
             """)
     CarSummaryInfoDTO findCarSummaryInfoById(@Param("id") int id);
-
-    @Query("""
-            SELECT
-                c.id as id,
-                c.registrationNumber as registrationNumber,
-                c.vin as vin,
-                concat(m.name, ' ', m.brand) as fullName
-            FROM Car c
-            JOin c.model m
-            """)
-    List<CarListViewProjection> findAllCarsListView();
 }
