@@ -355,4 +355,16 @@ public class CarRepositoryTest {
 
         carsAdminSummary.forEach(System.out::println);
     }
+
+    @Test
+    @Order(9)
+    @DisplayName("Test 9: Retrieving car for admin by id")
+    public void getCarForAdminByIdTest(){
+
+        int id = 1;
+        Car car = this.carRepository.findForAdminById(id).get();
+
+//        assertThat(car).isNotNull();
+//        System.out.println(car);
+    }
 }

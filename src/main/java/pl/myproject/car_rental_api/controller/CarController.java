@@ -32,9 +32,9 @@ public class CarController {
         return ResponseEntity.ok(carService.getCarsSummaryForAdmin());
     }
 
-    @GetMapping("/{id}/details")
-    public ResponseEntity<CarDetailsDTO> getCarWithDetailsById(@PathVariable int id) {
-        return ResponseEntity.ok(carService.getCarDTOWithDetailsById(id));
+    @GetMapping("/admin/cars/{id}")
+    public ResponseEntity<CarAdminDTO> getForAdminById(@PathVariable int id) {
+        return null;
     }
 
     @GetMapping("/{id}/overview")

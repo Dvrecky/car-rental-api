@@ -24,6 +24,10 @@ public interface CarRepository extends JpaRepository <Car, Integer> {
     @Query("SELECT c FROM Car c WHERE c.id = :id")
     Optional<Car> findCarWithDetailsById(@Param("id") int id);
 
+    @EntityGraph(attributePaths = {"model", "model.engine", "model.gearbox"})
+    @Query("SELECT c FROM Car c WHERE c.id = :id")
+    Optional<Car> findForAdminById(int id);
+
     Optional<Car> findCarByVin(String vin);
 
     @Query(

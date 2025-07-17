@@ -25,3 +25,6 @@ VALUES
 INSERT INTO car_availability (status, start_date, end_date, car_id)
 VALUES ('AVAILABLE', '2025-01-01', '2025-01-30', 1);
 
+INSERT INTO car_conditions (name, is_rentable, description, car_id)
+VALUES ('OK', 1, 'Everything is ok', 1);
+

@@ -55,9 +55,9 @@ public class CarServiceImpl implements CarService {
         Car car = modelMapper.map(carDTO, Car.class);
 
         // 🔥 Ręcznie ustawiamy referencję dla relacji dwustronnej
-        if (car.getCarCondition() != null) {
-            car.getCarCondition().setCar(car);
-        }
+//        if (car.getCarCondition() != null) {
+//            car.getCarCondition().setCar(car);
+//        }
 
         Car newCar = carRepository.save(car);
 
@@ -69,11 +69,15 @@ public class CarServiceImpl implements CarService {
         return carRepository.findCarSummaryInfoById(id);
     }
 
+    /**
+     * @param id of the car
+     * @return Car DTO for Admin
+     */
     @Override
-    public CarDetailsDTO getCarDTOWithDetailsById(int id) {
-        Car car = carRepository.findCarWithDetailsById(id).get();
-        return modelMapper.map(car, CarDetailsDTO.class);
+    public CarAdminDTO getForAdminById(int id) {
+        return null;
     }
+
 
     public Car getCarWithDetailsById(int id) {
         return carRepository.findCarWithDetailsById(id).get();

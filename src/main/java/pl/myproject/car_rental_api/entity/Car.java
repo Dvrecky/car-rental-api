@@ -13,22 +13,22 @@ import java.time.LocalDate;
 @ToString
 @Entity
 @Table(name = "cars")
-@NamedEntityGraph(
-        name = "car-model",
-        attributeNodes = {
-                @NamedAttributeNode(value = "model", subgraph = "model-engine-gearbox"),
-                @NamedAttributeNode("carCondition")
-        },
-        subgraphs = {
-                @NamedSubgraph(
-                        name = "model-engine-gearbox",
-                        attributeNodes = {
-                                @NamedAttributeNode("engine"),
-                                @NamedAttributeNode("gearbox")
-                        }
-                )
-        }
-)
+//@NamedEntityGraph(
+//        name = "car-model",
+//        attributeNodes = {
+//                @NamedAttributeNode(value = "model", subgraph = "model-engine-gearbox"),
+//                @NamedAttributeNode("carCondition")
+//        },
+//        subgraphs = {
+//                @NamedSubgraph(
+//                        name = "model-engine-gearbox",
+//                        attributeNodes = {
+//                                @NamedAttributeNode("engine"),
+//                                @NamedAttributeNode("gearbox")
+//                        }
+//                )
+//        }
+//)
 public class Car {
 
     @Id
@@ -61,7 +61,11 @@ public class Car {
     @JoinColumn(name = "model_id")
     private Model model;
 
-    @OneToOne(mappedBy = "car", fetch = FetchType.LAZY,cascade = { CascadeType.PERSIST, CascadeType.REMOVE})
+    @ToString.Exclude
+    @OneToOne(
+            mappedBy = "car",
+            fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.REMOVE},
+            optional = false)
     private CarCondition carCondition;
 
     public Car(int basePrice, int rentalPricePerDay, LocalDate insuranceExpiryDate, int mileage, LocalDate lastServiceDate, String registrationNumber) {

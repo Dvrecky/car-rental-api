@@ -17,7 +17,7 @@ public interface CarService {
 
     CarSummaryInfoDTO getCarSummaryById(int id);
 
-    CarDetailsDTO getCarDTOWithDetailsById(int id);
+    CarAdminDTO getForAdminById(int id);
 
     Car getCarWithDetailsById(int id);
 

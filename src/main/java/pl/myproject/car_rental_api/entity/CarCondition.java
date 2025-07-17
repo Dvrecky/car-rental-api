@@ -14,7 +14,6 @@ import lombok.*;
 public class CarCondition {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private int id;
 
@@ -28,6 +27,7 @@ public class CarCondition {
     private String description;
 
     @JoinColumn(name = "car_id")
+    @MapsId
     @OneToOne(fetch = FetchType.LAZY)
     private Car car;
 }

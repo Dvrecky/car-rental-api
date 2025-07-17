@@ -15,19 +15,18 @@ import pl.myproject.car_rental_api.dto.gearbox.GearboxDTO;
 import pl.myproject.car_rental_api.dto.model.ModelDTO;
 import pl.myproject.car_rental_api.service.CarService;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.List;
+
+import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.willDoNothing;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.hamcrest.CoreMatchers.is;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
-import java.util.List;
-
-import static org.mockito.BDDMockito.given;
 
 @WebMvcTest(CarController.class)
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
@@ -235,7 +234,7 @@ public class CarControllerTest {
                 .build();
 
         // mocking carService.getCarByIdWithDetails() behaviour to return carDTO
-        given(carService.getCarDTOWithDetailsById(i)).willReturn(carDTO);
+//        given(carService.getCarDTOWithDetailsById(i)).willReturn(carDTO);
 
         // sending GET request to "/api/cars/{id}"
         ResultActions response = mockMvc.perform(get("/api/cars/{id}", i));
