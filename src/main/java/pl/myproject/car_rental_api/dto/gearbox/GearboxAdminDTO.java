@@ -1,8 +1,10 @@
 package pl.myproject.car_rental_api.dto.gearbox;
 
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class GearboxAdminDTO {
 
     private int id;

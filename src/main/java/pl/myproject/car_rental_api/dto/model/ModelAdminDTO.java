@@ -1,5 +1,6 @@
 package pl.myproject.car_rental_api.dto.model;
 
+import lombok.Builder;
 import lombok.Data;
 import pl.myproject.car_rental_api.dto.engine.EngineAdminDTO;
 import pl.myproject.car_rental_api.dto.gearbox.GearboxAdminDTO;
@@ -8,6 +9,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class ModelAdminDTO {
 
     private int id;

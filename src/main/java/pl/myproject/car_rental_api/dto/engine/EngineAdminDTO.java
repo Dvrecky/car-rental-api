@@ -1,10 +1,12 @@
 package pl.myproject.car_rental_api.dto.engine;
 
+import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
 
 @Data
+@Builder
 public class EngineAdminDTO {
 
     private int id;

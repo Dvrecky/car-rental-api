@@ -1,11 +1,13 @@
 package pl.myproject.car_rental_api.dto.car;
 
+import lombok.Builder;
 import lombok.Data;
 import pl.myproject.car_rental_api.dto.model.ModelAdminDTO;
 
 import java.time.LocalDate;
 
 @Data
+@Builder
 public class CarAdminDTO {
 
     private int id;

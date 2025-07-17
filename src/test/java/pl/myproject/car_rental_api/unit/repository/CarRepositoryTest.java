@@ -364,7 +364,7 @@ public class CarRepositoryTest {
         int id = 1;
         Car car = this.carRepository.findForAdminById(id).get();
 
-//        assertThat(car).isNotNull();
-//        System.out.println(car);
+        assertThat(car).isNotNull();
+        System.out.println(car);
     }
 }
