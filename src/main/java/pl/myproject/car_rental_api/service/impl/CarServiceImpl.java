@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import pl.myproject.car_rental_api.dto.car.*;
 import pl.myproject.car_rental_api.entity.Car;
 
+import pl.myproject.car_rental_api.exception.ResourceNotFoundException;
+import pl.myproject.car_rental_api.mapper.CarMapper;
 import pl.myproject.car_rental_api.repository.CarRepository;
 import pl.myproject.car_rental_api.service.CarService;
 
@@ -75,7 +77,8 @@ public class CarServiceImpl implements CarService {
      */
     @Override
     public CarAdminDTO getForAdminById(int id) {
-        return null;
+        return CarMapper.toDto(carRepository.findForAdminById(id).orElseThrow(
+                () -> new ResourceNotFoundException("Car resource with ID: " + id + "has not been found")));
     }
 
 

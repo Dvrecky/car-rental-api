@@ -34,7 +34,7 @@ public class CarController {
 
     @GetMapping("/admin/cars/{id}")
     public ResponseEntity<CarAdminDTO> getForAdminById(@PathVariable int id) {
-        return null;
+        return ResponseEntity.ok(carService.getForAdminById(id));
     }
 
     @GetMapping("/{id}/overview")
